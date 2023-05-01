@@ -50,6 +50,13 @@ Created and maintained by Ambient Digital.
 - Ensure the code passes the tests
 - Create a pull request
 
+## Run tests
+
+- Run tests
+  ````
+  pytest --ds settings tests
+  ````
+
 ## Git hooks (via pre-commit)
 
 We use pre-push hooks to ensure that only linted code reaches our remote repository and pipelines aren't triggered in

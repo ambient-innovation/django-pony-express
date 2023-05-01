@@ -39,6 +39,9 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+   'freezegun~=1.2',
+   'pytest-django~=4.5',
+   'pytest-mock~=3.10',
    'pre-commit~=3.2',
    'black~=23.3',
    'Django~=3.2',
@@ -126,7 +129,7 @@ deps =
     django40: Django>=4.0,<4.1
     django41: Django>=4.1,<4.2
 commands =
-    python main.py run-all-tests
+    pytest --ds settings tests
 
 [gh-actions]
 python =
