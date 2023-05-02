@@ -1,0 +1,3 @@
+I am a different content than the HTML part to validate that I am not rendered using the HTML template.
+
+And here is the variable: {{ my_var }}.

@@ -1,0 +1,141 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "django-pony-express"
+authors = [
+    {'name' = 'Ambient Digital', 'email' = 'hello@ambient.digital'},
+]
+readme = "README.md"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 2.2",
+    "Framework :: Django :: 3.1",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
+    "Framework :: Django :: 4.1",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Utilities",
+]
+dynamic = ["version", "description"]
+license = {"file" = "LICENSE.md"}
+dependencies = [
+    'Django>=2.2.28',
+    'html2text>=2020.1.16',
+]
+
+
+[project.optional-dependencies]
+dev = [
+   'freezegun~=1.2',
+   'pytest-django~=4.5',
+   'pytest-mock~=3.10',
+   'pre-commit~=3.2',
+   'black~=23.3',
+   'Django~=3.2',
+   'sphinx==4.2.0',
+   'sphinx-rtd-theme==1.0.0',
+   'm2r2==0.3.1',
+   'mistune<2.0.0',
+]
+
+[tool.flit.module]
+name = "django_pony_express"
+
+[project.urls]
+'Documentation' = 'https://django-pony-express.readthedocs.io/en/latest/index.html'
+'Maintained by' = 'https://ambient.digital/'
+'Bugtracker' = 'https://github.com/ambient-innovation/django-pony-express/issues'
+'Changelog' = 'https://django-pony-express.readthedocs.io/en/latest/features/changelog.html'
+
+
+[tool.black]
+line-length = 120
+multi_line_output = 3
+skip-string-normalization = true
+include_trailing_comma = true
+
+[tool.ruff]
+# Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
+select = ["E", "F", "W", "N", "I", "B", "A", "DTZ", "DJ"]
+ignore = [
+    'N999', # Project name contains underscore, not fixable
+    'A003', # Django attributes shadow python builtins
+    'DJ001', # Django model text-based fields shouldn't be nullable
+    'B905', # Django model text-based fields shouldn't be nullable
+]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable =["E", "F", "W", "N", "I", "B", "A", "DTZ", "DJ"]
+unfixable = []
+
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "*/migrations/*"
+]
+
+# Same as Black.
+line-length = 120
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python 3.11
+target-version = "py311"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py{38,39,310,311}-django{22,30,31,32,40,41}
+isolated_build = True
+
+[testenv]
+deps =
+    django22: Django>=2.2.28,<3.0
+    django30: Django>=3.0,<3.1
+    django31: Django>=3.1,<3.2
+    django32: Django>=3.2,<3.3
+    django40: Django>=4.0,<4.1
+    django41: Django>=4.1,<4.2
+extras = dev,
+commands =
+    pytest --ds settings tests
+
+[gh-actions]
+python =
+    3.8: py38
+    3.9: py39
+    3.10: py310
+    3.11: py311
+"""
