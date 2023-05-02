@@ -8,7 +8,7 @@ Full documentation for the project is available at [readthedocs.io](https://djan
 
 ---
 
-<img src="resources/ambient_logo.svg" width="300px" />
+<img src="https://github.com/ambient-innovation/django-pony-express/blob/master/resources/ambient_logo.svg" width="300px" alt="Ambient Digital" />
 
 Created and maintained by Ambient Digital.
 
