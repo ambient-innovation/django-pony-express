@@ -7,8 +7,17 @@
 Full documentation for the project is available at [readthedocs.io](https://django-pony-express.readthedocs.io/en/latest/index.html).
 
 Created and maintained by [Ambient Digital](https://ambient.digital).
+[
+# Etymology
 
----
+> The Pony Express was an American express mail service that used relays of horse-mounted riders. [...] During its 18
+> months of operation, the Pony Express reduced the time for messages to travel between the east and west US coast to
+> about 10 days
+>
+> https://en.wikipedia.org/wiki/Pony_Express
+
+The name of this package combines the Django mascot (a pony) with a once quite successful mail service in the US.
+Ingenious, right?
 
 # Installation
 
