@@ -16,7 +16,7 @@ import sys
 import django
 from django.conf import settings
 
-sys.path.insert(0, os.path.abspath('..'))  # so that we can access the package
+sys.path.insert(0, os.path.abspath('..'))  # so that we can access the "django_pony_express" package
 settings.configure(
     INSTALLED_APPS=[
         'django.contrib.admin',

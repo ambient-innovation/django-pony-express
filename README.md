@@ -8,6 +8,8 @@ Full documentation for the project is available at [readthedocs.io](https://djan
 
 Created and maintained by [Ambient Digital](https://ambient.digital).
 
+---
+
 # Etymology
 
 > The Pony Express was an American express mail service that used relays of horse-mounted riders. [...] During its 18
@@ -37,7 +39,7 @@ Ingenious, right?
         'django_pony_express',
     )
      ````
-  
+
 # Contribute
 
 ## Setup package for development
