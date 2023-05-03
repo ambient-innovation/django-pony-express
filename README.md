@@ -2,15 +2,26 @@
 [![Downloads](https://pepy.tech/badge/django-pony-express)](https://pepy.tech/project/django-pony-express)
 [![Documentation Status](https://readthedocs.org/projects/django-pony-express/badge/?version=latest)](https://django-pony-express.readthedocs.io/en/latest/?badge=latest)
 
-**Class-based emails including a test suite for Django**
+Welcome to the **django-pony-express** - class-based emails for Django shipping with a full test suite.
 
-Full documentation for the project is available at [readthedocs.io](https://django-pony-express.readthedocs.io/en/latest/index.html).
+Similar to class-based view in Django core, this package provides a neat, DRY and testable (!) way to handle your
+emails in Django.
 
-Created and maintained by [Ambient Digital](https://ambient.digital).
+* [PyPI](https://pypi.org/project/django-pony-express/)
+* [GitHub](https://github.com/ambient-innovation/django-pony-express)
+* [Full documentation](https://django-pony-express.readthedocs.io/en/latest/index.html)
+* Creator & Maintainer: [Ambient Digital](https://ambient.digital)
 
----
+## Features
 
-# Etymology
+* Class-based structure for emails
+   * Avoid duplicate low-level setup
+   * Utilise inheritance and OOP benefits
+   * No duplicated templates for HTML and plain-text
+* Test suite to write proper unit-tests for your emails
+   * Access your test outbox like a Django queryset
+
+## Etymology
 
 > The Pony Express was an American express mail service that used relays of horse-mounted riders. [...] During its 18
 > months of operation, the Pony Express reduced the time for messages to travel between the east and west US coast to
@@ -21,7 +32,7 @@ Created and maintained by [Ambient Digital](https://ambient.digital).
 The name of this package combines the Django mascot (a pony) with a once quite successful mail service in the US.
 Ingenious, right?
 
-# Installation
+## Installation
 
 - Install the package via pip:
 
@@ -40,16 +51,16 @@ Ingenious, right?
     )
      ````
 
-# Contribute
+## Contribute
 
-## Setup package for development
+### Setup package for development
 
 - Create a Python virtualenv and activate it
 - Install "pip-tools" with `pip install pip-tools`
 - Compile the requirements with `pip-compile --extra dev -o requirements.txt pyproject.toml --resolver=backtracking`
 - Sync the dependencies with your virtualenv with `pip-sync`
 
-## Add functionality
+### Add functionality
 
 - Create a new branch for your feature
 - Change the dependency in your requirements.txt to a local (editable) one that points to your local file system:
@@ -57,14 +68,14 @@ Ingenious, right?
 - Ensure the code passes the tests
 - Create a pull request
 
-## Run tests
+### Run tests
 
 - Run tests
   ````
   pytest --ds settings tests
   ````
 
-## Git hooks (via pre-commit)
+### Git hooks (via pre-commit)
 
 We use pre-push hooks to ensure that only linted code reaches our remote repository and pipelines aren't triggered in
 vain.
@@ -89,19 +100,19 @@ Example: run all hooks of pre-push stage
 
     pre-commit run --all-files --hook-stage push
 
-## Update documentation
+### Update documentation
 
 - To build the documentation run: `sphinx-build docs/ docs/_build/html/`.
 - Open `docs/_build/html/index.html` to see the documentation.
 
-## Translation files
+### Translation files
 
 If you have added custom text, make sure to wrap it in `_()` where `_` is
 gettext_lazy (`from django.utils.translation import gettext_lazy as _`).
 
 How to create translation file:
 
-* Navigate to `ai_django_core/ai_django_core` (the inner directory!)
+* Navigate to `django-pony-express` (the inner directory!)
 * `python manage.py makemessages -l de`
 * Have a look at the new/changed files within `ai_django_core/ai_django_core/locale`
 
@@ -111,13 +122,13 @@ How to compile translation files:
 * `python manage.py compilemessages`
 * Have a look at the new/changed files within `ai_django_core/ai_django_core/locale`
 
-## Publish to ReadTheDocs.io
+### Publish to ReadTheDocs.io
 
 - Fetch the latest changes in GitHub mirror and push them
 - Trigger new build at ReadTheDocs.io (follow instructions in admin panel at RTD) if the GitHub webhook is not yet set
   up.
 
-## Publish to PyPi
+### Publish to PyPi
 
 - Update documentation about new/changed functionality
 

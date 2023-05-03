@@ -58,3 +58,5 @@ MIDDLEWARE = (
 )
 
 TIME_ZONE = 'UTC'
+
+LOCALE_PATHS = [str(BASE_PATH) + '/django_pony_express/locale']
