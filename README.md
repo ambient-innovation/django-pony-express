@@ -12,7 +12,7 @@ Created and maintained by [Ambient Digital](https://ambient.digital).
 
 > The Pony Express was an American express mail service that used relays of horse-mounted riders. [...] During its 18
 > months of operation, the Pony Express reduced the time for messages to travel between the east and west US coast to
-> about 10 days
+> about 10 days.
 >
 > https://en.wikipedia.org/wiki/Pony_Express
 
