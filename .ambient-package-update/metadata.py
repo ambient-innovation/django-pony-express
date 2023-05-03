@@ -24,7 +24,7 @@ METADATA = PackageMetadata(
 > https://en.wikipedia.org/wiki/Pony_Express
 
 The name of this package combines the Django mascot (a pony) with a once quite successful mail service in the US.
-Ingenious, right?"""
+Ingenious, right?""",
     ),
     dependencies=[
         'Django>=2.2.28',
