@@ -2,7 +2,8 @@
 [![Downloads](https://pepy.tech/badge/django-pony-express)](https://pepy.tech/project/django-pony-express)
 [![Documentation Status](https://readthedocs.org/projects/django-pony-express/badge/?version=latest)](https://django-pony-express.readthedocs.io/en/latest/?badge=latest)
 
-Welcome to the **django-pony-express** - class-based emails for Django shipping with a full test suite.
+Welcome to the **django-pony-express** - class-based emails for Django shipping with a full test
+suite.
 
 Similar to class-based view in Django core, this package provides a neat, DRY and testable (!) way to handle your
 emails in Django.
@@ -23,9 +24,9 @@ emails in Django.
 
 ## Etymology
 
-> The Pony Express was an American express mail service that used relays of horse-mounted riders. [...] During its 18
-> months of operation, the Pony Express reduced the time for messages to travel between the east and west US coast to
-> about 10 days.
+> The Pony Express was an American express mail service that used relays of horse-mounted riders. [...] During its
+> 18 months of operation, the Pony Express reduced the time for messages to travel between the east and west US
+> coast to about 10 days.
 >
 > https://en.wikipedia.org/wiki/Pony_Express
 
@@ -114,13 +115,13 @@ How to create translation file:
 
 * Navigate to `django-pony-express` (the inner directory!)
 * `python manage.py makemessages -l de`
-* Have a look at the new/changed files within `ai_django_core/ai_django_core/locale`
+* Have a look at the new/changed files within `django-pony-express/locale`
 
 How to compile translation files:
 
-* Navigate to `ai_django_core/ai_django_core` (the inner directory!)
+* Navigate to `django-pony-express` (the inner directory!)
 * `python manage.py compilemessages`
-* Have a look at the new/changed files within `ai_django_core/ai_django_core/locale`
+* Have a look at the new/changed files within `django-pony-express/locale`
 
 ### Publish to ReadTheDocs.io
 

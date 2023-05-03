@@ -30,14 +30,14 @@ emails in Django.""",
 
 ## Etymology
 
-    > The Pony Express was an American express mail service that used relays of horse-mounted riders. [...] During its
-    > 18 months of operation, the Pony Express reduced the time for messages to travel between the east and west US
-    > coast to about 10 days.
-    >
-    > https://en.wikipedia.org/wiki/Pony_Express
+> The Pony Express was an American express mail service that used relays of horse-mounted riders. [...] During its
+> 18 months of operation, the Pony Express reduced the time for messages to travel between the east and west US
+> coast to about 10 days.
+>
+> https://en.wikipedia.org/wiki/Pony_Express
 
-    The name of this package combines the Django mascot (a pony) with a once quite successful mail service in the US.
-    Ingenious, right?""",
+The name of this package combines the Django mascot (a pony) with a once quite successful mail service in the US.
+Ingenious, right?""",
     ),
     dependencies=[
         'Django>=2.2.28',
