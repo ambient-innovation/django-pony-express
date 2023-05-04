@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8, 3.9, '3.10', '3.11']
-        django-version: [22, 30, 31, 32, 40, 41]
+        django-version: [22, 30, 31, 32, 40, 41, 42]
 
         exclude:
           - python-version: '3.11'
