@@ -1,5 +1,10 @@
 # Changelog
 
+* **1.1.1** (2023-05-10)
+  * Updated readme "maintenance" section
+  * Updated package linters
+  * Added release scripts for windows and UNIX
+
 * **1.1.0** (2023-05-04)
   * Support for Django 4.2 added
 
