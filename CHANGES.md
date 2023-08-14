@@ -1,5 +1,8 @@
 # Changelog
 
+* **1.1.2** (2023-08-14)
+  * Updated linters and add more strict linting rules
+
 * **1.1.1** (2023-05-10)
   * Updated readme "maintenance" section
   * Updated package linters

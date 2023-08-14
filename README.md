@@ -1,4 +1,4 @@
-[![pypi](https://img.shields.io/pypi/v/django-pony-express.svg)](https://pypi.python.org/pypi/django-pony-express/)
+[![PyPI release](https://img.shields.io/pypi/v/django-pony-express.svg)](https://img.shields.io/pypi/v/django-pony-express.svg)
 [![Downloads](https://pepy.tech/badge/django-pony-express)](https://pepy.tech/project/django-pony-express)
 [![Documentation Status](https://readthedocs.org/projects/django-pony-express/badge/?version=latest)](https://django-pony-express.readthedocs.io/en/latest/?badge=latest)
 
@@ -35,6 +35,7 @@ Ingenious, right?
 
 ## Installation
 
+
 - Install the package via pip:
 
   `pip install django-pony-express`
@@ -51,6 +52,7 @@ Ingenious, right?
         'django_pony_express',
     )
      ````
+
 
 ## Contribute
 
