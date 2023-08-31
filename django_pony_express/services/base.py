@@ -21,7 +21,7 @@ class BaseEmailServiceFactory:
     service_class = None
     recipient_email_list = []
 
-    def __init__(self, recipient_email_list: Union[list, QuerySet] = None, **kwargs) -> None:
+    def __init__(self, recipient_email_list: Union[list, tuple, QuerySet] = None, **kwargs) -> None:
         """
         Initialisation takes optionally a list of recipients. Doesn't have to be a list of strings because
         fetching the actual email from a complex data structure can be done in the method `get_email_from_recipient()`
@@ -122,7 +122,7 @@ class BaseEmailService:
 
     def __init__(
         self,
-        recipient_email_list: Union[list, str] = None,
+        recipient_email_list: Union[list, tuple, str] = None,
         context_data: dict = None,
         attachment_list: list = None,
         **kwargs,

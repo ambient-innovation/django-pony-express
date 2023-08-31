@@ -1,5 +1,8 @@
 # Changelog
 
+* **1.1.3** (2023-08-31)
+  * Improved type-hinting for constructor of `BaseEmailServiceFactory` and `BaseEmailService`
+
 * **1.1.2** (2023-08-14)
   * Updated linters and add more strict linting rules
 
