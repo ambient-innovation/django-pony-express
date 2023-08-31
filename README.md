@@ -1,5 +1,5 @@
 [![PyPI release](https://img.shields.io/pypi/v/django-pony-express.svg)](https://img.shields.io/pypi/v/django-pony-express.svg)
-[![Downloads](https://pepy.tech/badge/django-pony-express)](https://pepy.tech/project/django-pony-express)
+[![Downloads](https://static.pepy.tech/badge/django-pony-express)](https://pepy.tech/project/django-pony-express)
 [![Documentation Status](https://readthedocs.org/projects/django-pony-express/badge/?version=latest)](https://django-pony-express.readthedocs.io/en/latest/?badge=latest)
 
 Welcome to the **django-pony-express** - class-based emails for Django shipping with a full test

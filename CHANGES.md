@@ -1,5 +1,8 @@
 # Changelog
 
+* **1.1.4** (2023-08-31)
+  * Fixed downloads badge
+
 * **1.1.3** (2023-08-31)
   * Improved type-hinting for constructor of `BaseEmailServiceFactory` and `BaseEmailService`
 
