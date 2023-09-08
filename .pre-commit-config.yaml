@@ -2,7 +2,7 @@
 # https://pre-commit.com/
 
 repos:
-  - repo: https://github.com/ambv/black
+  - repo: https://github.com/psf/black-pre-commit-mirror
     rev: 23.7.0
     hooks:
       - id: black

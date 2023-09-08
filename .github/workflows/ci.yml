@@ -27,27 +27,13 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8, 3.9, '3.10', '3.11']
-        django-version: [22, 30, 31, 32, 40, 41, 42]
+        django-version: [32, 41, 42]
 
         exclude:
           - python-version: '3.11'
-            django-version: 40
-          - python-version: '3.11'
             django-version: 32
           - python-version: '3.10'
             django-version: 32
-          - python-version: '3.11'
-            django-version: 31
-          - python-version: '3.10'
-            django-version: 31
-          - python-version: '3.11'
-            django-version: 30
-          - python-version: '3.10'
-            django-version: 30
-          - python-version: '3.11'
-            django-version: 22
-          - python-version: '3.10'
-            django-version: 22
 
     steps:
       - uses: actions/checkout@v3

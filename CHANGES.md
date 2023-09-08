@@ -1,5 +1,8 @@
 # Changelog
 
+* *1.1.6** (2023-09-08)
+  * Metadata update via ambient package updater
+
 * *1.1.5** (2023-09-08)
   * Metadata update via ambient package updater
   * Cleaned up test matrix
