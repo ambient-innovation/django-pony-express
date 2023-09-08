@@ -16,7 +16,7 @@ classifiers = [
     "Framework :: Django :: 4.1",
     "Framework :: Django :: 4.2",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
@@ -47,7 +47,7 @@ dev = [
    'sphinx-rtd-theme==1.0.0',
    'm2r2==0.3.1',
    'mistune<2.0.0',
-   'ambient-package-update~=23.8.3',
+   'ambient-package-update~=23.9.2',
 ]
 
 [tool.flit.module]
@@ -70,8 +70,26 @@ skip-string-normalization = true
 include_trailing_comma = true
 
 [tool.ruff]
-# Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
-select = ["E", "F", "W", "N", "I", "B", "A", "DTZ", "DJ", "RUF100", "YTT", "C4", "PIE", "INT", "PGH"]
+select = [
+    "E",       # pycodestyle errors
+    "W",       # pycodestyle warnings
+    "F",       # Pyflakes
+    "N",       # pep8-naming
+    "I",       # isort
+    "B",       # flake8-bugbear
+    "A",       # flake8-builtins
+    "DTZ",     # flake8-datetimez
+    "DJ",      # flake8-django
+    "RUF100",  # Removes unnecessary "#noqa" comments
+    "YTT",     # Avoid non-future-prove usages of "sys"
+    # "FBT",     # Protects you from the "boolean trap bug"
+    "C4",      # Checks for unnecessary conversions
+    "PIE",     # Bunch of useful rules
+    # "SIM",     # Simplifies your code
+    "INT",     # Validates your gettext translation strings
+    "PGH",     # No all-purpose "# noqa" and eval validation
+    # "UP",      # PyUpgrade
+]
 ignore = [
     'N999', # Project name contains underscore, not fixable
     'A003', # Django attributes shadow python builtins
@@ -80,7 +98,26 @@ ignore = [
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = ["E", "F", "W", "N", "I", "B", "A", "DTZ", "DJ", "RUF100", "YTT", "C4", "PIE", "INT", "PGH"]
+fixable = [
+    "E",       # pycodestyle errors
+    "W",       # pycodestyle warnings
+    "F",       # Pyflakes
+    "N",       # pep8-naming
+    "I",       # isort
+    "B",       # flake8-bugbear
+    "A",       # flake8-builtins
+    "DTZ",     # flake8-datetimez
+    "DJ",      # flake8-django
+    "RUF100",  # Removes unnecessary "#noqa" comments
+    "YTT",     # Avoid non-future-prove usages of "sys"
+    # "FBT",     # Protects you from the "boolean trap bug"
+    "C4",      # Checks for unnecessary conversions
+    "PIE",     # Bunch of useful rules
+    # "SIM",     # Simplifies your code
+    "INT",     # Validates your gettext translation strings
+    "PGH",     # No all-purpose "# noqa" and eval validation
+    # "UP",      # PyUpgrade
+]
 unfixable = []
 
 exclude = [

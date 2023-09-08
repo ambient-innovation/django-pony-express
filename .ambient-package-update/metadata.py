@@ -1,5 +1,5 @@
 from ambient_package_update.metadata.author import PackageAuthor
-from ambient_package_update.metadata.constants import DEV_DEPENDENCIES
+from ambient_package_update.metadata.constants import DEV_DEPENDENCIES, LICENSE_GPL
 from ambient_package_update.metadata.package import PackageMetadata
 from ambient_package_update.metadata.readme import ReadmeContent
 from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredInspection
@@ -12,6 +12,9 @@ METADATA = PackageMetadata(
             email='hello@ambient.digital',
         ),
     ],
+    company='Ambient Innovation: GmbH',
+    license=LICENSE_GPL,
+    license_year=2023,
     development_status='5 - Production/Stable',
     readme_content=ReadmeContent(
         tagline="""Welcome to the **django-pony-express** - class-based emails for Django shipping with a full test

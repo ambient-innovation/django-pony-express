@@ -12,7 +12,7 @@ repos:
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # Ruff version.
-    rev: 'v0.0.284'
+    rev: 'v0.0.285'
     hooks:
       - id: ruff
         args: [ --fix, --exit-non-zero-on-fix ]
