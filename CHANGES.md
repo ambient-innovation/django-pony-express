@@ -1,5 +1,8 @@
 # Changelog
 
+* *1.2.2** (2023-10-04)
+  * Dependency to ambient updater updated
+
 * *1.2.1** (2023-10-04)
   * Downgraded Python to 3.11 for readthedocs.org
 

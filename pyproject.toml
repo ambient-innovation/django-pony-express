@@ -48,7 +48,7 @@ dev = [
    'sphinx-rtd-theme==1.0.0',
    'm2r2==0.3.1',
    'mistune<2.0.0',
-   'ambient-package-update~=23.9.5',
+   'ambient-package-update~=23.10.1',
 ]
 
 [tool.flit.module]
