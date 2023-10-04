@@ -1,5 +1,9 @@
 # Changelog
 
+* *1.2.0** (2023-10-04)
+  * Added Python 3.12 support
+  * Updated internal linter packages
+
 * *1.1.6** (2023-09-08)
   * Metadata update via ambient package updater
 

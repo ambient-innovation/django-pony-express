@@ -43,7 +43,7 @@ The name of this package combines the Django mascot (a pony) with a once quite s
 Ingenious, right?""",
     ),
     dependencies=[
-        'Django>=2.2.28',
+        'Django>=3.2',
         'html2text>=2020.1.16',
     ],
     optional_dependencies={
