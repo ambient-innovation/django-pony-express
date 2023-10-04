@@ -1,5 +1,8 @@
 # Changelog
 
+* *1.2.1** (2023-10-04)
+  * Downgraded Python to 3.11 for readthedocs.org
+
 * *1.2.0** (2023-10-04)
   * Added Python 3.12 support
   * Updated internal linter packages
