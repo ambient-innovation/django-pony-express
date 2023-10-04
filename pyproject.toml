@@ -157,7 +157,7 @@ target-version = "py312"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py{38,39,310,311}-django{32,41,42,50}
+envlist = py{38,39,310,311}-django{32,41,42}
 isolated_build = True
 
 [testenv]
@@ -166,7 +166,6 @@ deps =
     django32: Django>=3.2,<3.3
     django41: Django>=4.1,<4.2
     django42: Django>=4.2,<4.3
-    django50: Django>=5.0,<5.1
 extras = dev,
 commands =
     pytest --ds settings tests

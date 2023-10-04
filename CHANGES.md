@@ -2,7 +2,6 @@
 
 * *1.2.0** (2023-10-04)
   * Added Python 3.12 support
-  * Added Django 5.0 support
   * Updated internal linter packages
 
 * *1.1.6** (2023-09-08)
