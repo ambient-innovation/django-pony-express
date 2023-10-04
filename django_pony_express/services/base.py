@@ -136,7 +136,7 @@ class BaseEmailService:
 
         super().__init__()
 
-        # Ensure that a single email address is wrapped in a list so we can use it in the `to` kwarg.
+        # Ensure that a single email address is wrapped in a list, so we can use it in the `to` kwarg.
         if isinstance(recipient_email_list, str):
             recipient_email_list = [recipient_email_list]
 
@@ -236,7 +236,7 @@ class BaseEmailService:
         # Render TXT body part if a template is explicitly set, otherwise convert HTML template to plain text
         if not self.template_txt_name:
             h = html2text.HTML2Text()
-            # Set body width to infinite to avoid weird line breaks
+            # Set body width to "infinite" to avoid weird line breaks
             h.body_width = 0
             text_content = h.handle(html_content)
         else:
