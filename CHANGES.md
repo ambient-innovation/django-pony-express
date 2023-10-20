@@ -1,5 +1,9 @@
 # Changelog
 
+* *1.2.3** (2023-10-20)
+  * Linter updaters including code adjustments
+  * Updates from ambient updater
+
 * *1.2.2** (2023-10-04)
   * Dependency to ambient updater updated
 

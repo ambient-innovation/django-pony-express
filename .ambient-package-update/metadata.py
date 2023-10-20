@@ -1,5 +1,10 @@
 from ambient_package_update.metadata.author import PackageAuthor
-from ambient_package_update.metadata.constants import DEV_DEPENDENCIES, LICENSE_GPL
+from ambient_package_update.metadata.constants import (
+    DEV_DEPENDENCIES,
+    LICENSE_GPL,
+    SUPPORTED_DJANGO_VERSIONS,
+    SUPPORTED_PYTHON_VERSIONS,
+)
 from ambient_package_update.metadata.package import PackageMetadata
 from ambient_package_update.metadata.readme import ReadmeContent
 from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredInspection
@@ -46,6 +51,8 @@ Ingenious, right?""",
         'Django>=3.2',
         'html2text>=2020.1.16',
     ],
+    supported_django_versions=SUPPORTED_DJANGO_VERSIONS,
+    supported_python_versions=SUPPORTED_PYTHON_VERSIONS,
     optional_dependencies={
         'dev': [
             *DEV_DEPENDENCIES,

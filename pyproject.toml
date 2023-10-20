@@ -41,14 +41,14 @@ dev = [
    'freezegun~=1.2',
    'pytest-django~=4.5',
    'pytest-mock~=3.10',
-   'pre-commit~=3.2',
-   'black~=23.3',
-   'Django~=3.2',
+   'coverage~=7.3',
+   'pre-commit~=3.5',
+   'black~=23.10',
    'sphinx==4.2.0',
    'sphinx-rtd-theme==1.0.0',
    'm2r2==0.3.1',
    'mistune<2.0.0',
-   'ambient-package-update~=23.10.1',
+   'ambient-package-update~=23.10.2',
 ]
 
 [tool.flit.module]
@@ -88,8 +88,9 @@ select = [
     "PIE",     # Bunch of useful rules
     # "SIM",     # Simplifies your code
     "INT",     # Validates your gettext translation strings
+    "PERF",    # PerfLint
     "PGH",     # No all-purpose "# noqa" and eval validation
-    # "UP",      # PyUpgrade
+    "PL",      # PyLint
 ]
 ignore = [
     'N999', # Project name contains underscore, not fixable
@@ -116,8 +117,9 @@ fixable = [
     "PIE",     # Bunch of useful rules
     # "SIM",     # Simplifies your code
     "INT",     # Validates your gettext translation strings
+    "PERF",    # PerfLint
     "PGH",     # No all-purpose "# noqa" and eval validation
-    # "UP",      # PyUpgrade
+    "PL",      # PyLint
 ]
 unfixable = []
 
@@ -163,12 +165,12 @@ isolated_build = True
 [testenv]
 # Django deprecation overview: https://www.djangoproject.com/download/
 deps =
-    django32: Django>=3.2,<3.3
-    django41: Django>=4.1,<4.2
-    django42: Django>=4.2,<4.3
+    django32: Django==3.2.*
+    django41: Django==4.1.*
+    django42: Django==4.2.*
 extras = dev,
 commands =
-    pytest --ds settings tests
+    coverage run -m pytest --ds settings tests
 
 [gh-actions]
 python =

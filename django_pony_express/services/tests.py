@@ -78,9 +78,7 @@ class EmailTestService:
         self.reload()
 
         # Load data to matching list
-        match_list = []
-        for email in self._outbox:
-            match_list.append(email)
+        match_list = list(self._outbox)
 
         return EmailTestServiceQuerySet(matching_list=match_list)
 
