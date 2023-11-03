@@ -10,17 +10,18 @@ from ambient_package_update.metadata.readme import ReadmeContent
 from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredInspection
 
 METADATA = PackageMetadata(
-    package_name='django_pony_express',
+    package_name="django_pony_express",
     authors=[
         PackageAuthor(
-            name='Ambient Digital',
-            email='hello@ambient.digital',
+            name="Ambient Digital",
+            email="hello@ambient.digital",
         ),
     ],
-    company='Ambient Innovation: GmbH',
+    company="Ambient Innovation: GmbH",
     license=LICENSE_GPL,
     license_year=2023,
-    development_status='5 - Production/Stable',
+    development_status="5 - Production/Stable",
+    has_migrations=False,
     readme_content=ReadmeContent(
         tagline="""Welcome to the **django-pony-express** - class-based emails for Django shipping with a full test
 suite.
@@ -48,20 +49,20 @@ The name of this package combines the Django mascot (a pony) with a once quite s
 Ingenious, right?""",
     ),
     dependencies=[
-        'Django>=3.2',
-        'html2text>=2020.1.16',
+        "Django>=3.2",
+        "html2text>=2020.1.16",
     ],
     supported_django_versions=SUPPORTED_DJANGO_VERSIONS,
     supported_python_versions=SUPPORTED_PYTHON_VERSIONS,
     optional_dependencies={
-        'dev': [
+        "dev": [
             *DEV_DEPENDENCIES,
         ],
     },
     ruff_ignore_list=[
-        RuffIgnoredInspection(key='N999', comment="Project name contains underscore, not fixable"),
-        RuffIgnoredInspection(key='A003', comment="Django attributes shadow python builtins"),
-        RuffIgnoredInspection(key='DJ001', comment="Django model text-based fields shouldn't be nullable"),
-        RuffIgnoredInspection(key='B905', comment="Can be enabled when Python <=3.9 support is dropped"),
+        RuffIgnoredInspection(key="N999", comment="Project name contains underscore, not fixable"),
+        RuffIgnoredInspection(key="A003", comment="Django attributes shadow python builtins"),
+        RuffIgnoredInspection(key="DJ001", comment="Django model text-based fields shouldn't be nullable"),
+        RuffIgnoredInspection(key="B905", comment="Can be enabled when Python <=3.9 support is dropped"),
     ],
 )

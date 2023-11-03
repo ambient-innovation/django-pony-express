@@ -1,5 +1,8 @@
 # Changelog
 
+* *1.2.4** (2023-11-03)
+  * Switched formatter from `black` to `ruff`
+
 * *1.2.3** (2023-10-20)
   * Linter updaters including code adjustments
   * Updates from ambient updater

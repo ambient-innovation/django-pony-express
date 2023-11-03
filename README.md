@@ -2,7 +2,7 @@
 [![Downloads](https://static.pepy.tech/badge/django-pony-express)](https://pepy.tech/project/django-pony-express)
 [![Coverage](https://img.shields.io/badge/Coverage-100%25-success)](https://github.com/ambient-innovation/django-pony-express/actions?workflow=CI)
 [![Linting](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Coding Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
+[![Coding Style](https://img.shields.io/badge/code%20style-Ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![Documentation Status](https://readthedocs.org/projects/django-pony-express/badge/?version=latest)](https://django-pony-express.readthedocs.io/en/latest/?badge=latest)
 
 Welcome to the **django-pony-express** - class-based emails for Django shipping with a full test
@@ -55,6 +55,10 @@ Ingenious, right?
         'django_pony_express',
     )
      ````
+
+
+
+
 
 
 ## Contribute

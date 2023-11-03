@@ -44,7 +44,7 @@ class EmailTestService:
         self.reload()
 
         if not any([to, cc, bcc, subject]):
-            raise ValueError('EmailTestService.filter called without parameters')
+            raise ValueError("EmailTestService.filter called without parameters")
 
         if subject and not isinstance(subject, re.Pattern):
             # If the "subject" is a translatable, we have to cast it to string
@@ -185,9 +185,9 @@ class EmailTestServiceQuerySet(TestCase):
         Ensures that in the cached lookup is exactly one element. Needed for full-text-search.
         """
         if self.count() > 1:
-            raise RuntimeError('Current lookup has more than one email object and is thus ambiguous.')
+            raise RuntimeError("Current lookup has more than one email object and is thus ambiguous.")
         elif self.count() == 0:
-            raise RuntimeError('Current lookup has zero matches so lookup does not make sense.')
+            raise RuntimeError("Current lookup has zero matches so lookup does not make sense.")
 
     def _ensure_matching_list_was_populated(self):
         """
@@ -195,7 +195,7 @@ class EmailTestServiceQuerySet(TestCase):
         """
         if self._match_list is None:
             raise RuntimeError(
-                'Counting of matches called without previous query. ' 'Please call filter() or all() first.'
+                "Counting of matches called without previous query. " "Please call filter() or all() first."
             )
 
     def one(self):
@@ -252,7 +252,7 @@ class EmailTestServiceQuerySet(TestCase):
         Searches in a given email inside the HTML AND TXT part for a given string
         """
         warnings.warn(
-            'EmailTestServiceQuerySet.assert_subject is deprecated. Use queryset[0].assert_subject instead.',
+            "EmailTestServiceQuerySet.assert_subject is deprecated. Use queryset[0].assert_subject instead.",
             stacklevel=2,
         )
         # Ensure we just have found one element
@@ -264,8 +264,8 @@ class EmailTestServiceQuerySet(TestCase):
         Searches in a given email inside the HTML AND TXT part for a given string
         """
         warnings.warn(
-            'EmailTestServiceQuerySet.assert_body_contains is deprecated. '
-            'Use queryset[0].assert_body_contains instead.',
+            "EmailTestServiceQuerySet.assert_body_contains is deprecated. "
+            "Use queryset[0].assert_body_contains instead.",
             stacklevel=2,
         )
         # Ensure we just have found one element
@@ -277,8 +277,8 @@ class EmailTestServiceQuerySet(TestCase):
         Searches in a given email inside the HTML AND TXT part for a given string
         """
         warnings.warn(
-            'EmailTestServiceQuerySet.assert_body_contains is deprecated. '
-            'Use queryset[0].assert_body_contains_not instead.',
+            "EmailTestServiceQuerySet.assert_body_contains is deprecated. "
+            "Use queryset[0].assert_body_contains_not instead.",
             stacklevel=2,
         )
         # Ensure we just have found one element

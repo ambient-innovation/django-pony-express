@@ -39,9 +39,9 @@ class BaseEmailServiceFactory:
         but again, make sure that super() is called
         """
         if not self.service_class:
-            self._errors.append(_('Email factory requires a mail service class.'))
+            self._errors.append(_("Email factory requires a mail service class."))
         if not len(self.get_recipient_list()):
-            self._errors.append(_('Email factory requires a target mail address.'))
+            self._errors.append(_("Email factory requires a target mail address."))
 
         if self._errors and raise_exception:
             raise EmailServiceConfigError(self._errors)
@@ -93,7 +93,7 @@ class BaseEmailServiceFactory:
             for recipient in self.get_recipient_list():
                 email_object = self.service_class(
                     recipient_email_list=[self.get_email_from_recipient(recipient)],
-                    context_data={'recipient': recipient, **self.get_context_data()},
+                    context_data={"recipient": recipient, **self.get_context_data()},
                 )
                 email_object.process()
                 counter += 1
@@ -157,7 +157,7 @@ class BaseEmailService:
         emails. Can be overridden if required.
         """
         if self.SUBJECT_PREFIX:
-            return f'{self.SUBJECT_PREFIX} - {self.subject}'
+            return f"{self.SUBJECT_PREFIX} - {self.subject}"
         return self.subject
 
     def get_from_email(self) -> str:
@@ -211,10 +211,10 @@ class BaseEmailService:
         for attachment in self.get_attachments():
             if isinstance(attachment, dict):
                 try:
-                    msg.attach(attachment['filename'], attachment['file'], attachment.get('mimetype', None))
+                    msg.attach(attachment["filename"], attachment["file"], attachment.get("mimetype", None))
                 except KeyError as e:
                     raise EmailServiceAttachmentError(
-                        _('Missing or mislabeled data provided for email attachment.')
+                        _("Missing or mislabeled data provided for email attachment.")
                     ) from e
             else:
                 msg.attach_file(attachment)
@@ -271,11 +271,11 @@ class BaseEmailService:
         but again, make sure that super() is called.
         """
         if not self.get_subject():
-            self._errors.append(_('Email service requires a subject.'))
+            self._errors.append(_("Email service requires a subject."))
         if not self.template_name:
-            self._errors.append(_('Email service requires a template.'))
+            self._errors.append(_("Email service requires a template."))
         if not len(self.recipient_email_list):
-            self._errors.append(_('Email service requires a target mail address.'))
+            self._errors.append(_("Email service requires a target mail address."))
 
         if self._errors and raise_exception:
             raise EmailServiceConfigError(self._errors)

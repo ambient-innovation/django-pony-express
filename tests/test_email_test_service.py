@@ -14,15 +14,15 @@ class EmailTestServiceTest(TestCase):
         super().setUpClass()
 
         # Mail data
-        cls.subject = 'Super great email (definitely not spam!)'
-        cls.to = 'spam@world.com'
-        cls.cc = 'spam-copy@world.com'
-        cls.bcc = 'spam-secret@world.com'
-        cls.content_part = 'body part'
-        cls.text_content = 'I\'m the %s.' % cls.content_part
-        cls.html_content = '<html>I\'m the %s.</html>' % cls.content_part
+        cls.subject = "Super great email (definitely not spam!)"
+        cls.to = "spam@world.com"
+        cls.cc = "spam-copy@world.com"
+        cls.bcc = "spam-secret@world.com"
+        cls.content_part = "body part"
+        cls.text_content = "I'm the %s." % cls.content_part
+        cls.html_content = "<html>I'm the %s.</html>" % cls.content_part
 
-        cls.other_mail_subject = 'Other mail subject'
+        cls.other_mail_subject = "Other mail subject"
 
         # Initialize django outbox
         mail.outbox = []
@@ -40,7 +40,7 @@ class EmailTestServiceTest(TestCase):
 
         # Create second email per test case
         email = EmailMultiAlternatives(
-            self.other_mail_subject, self.text_content, to=['to@world.com'], cc=['cc@world.com'], bcc=['bcc@world.com']
+            self.other_mail_subject, self.text_content, to=["to@world.com"], cc=["cc@world.com"], bcc=["bcc@world.com"]
         )
         email.attach_alternative(self.html_content, "text/html")
         mail.outbox.append(email)
@@ -54,7 +54,7 @@ class EmailTestServiceTest(TestCase):
         self.assertEqual(self.ets.all().count(), 2)
         # Create third mail
         email = EmailMultiAlternatives(
-            self.other_mail_subject, self.text_content, to=['to@world.com'], cc=['cc@world.com'], bcc=['bcc@world.com']
+            self.other_mail_subject, self.text_content, to=["to@world.com"], cc=["cc@world.com"], bcc=["bcc@world.com"]
         )
         email.attach_alternative(self.html_content, "text/html")
         mail.outbox.append(email)
@@ -92,19 +92,19 @@ class EmailTestServiceTest(TestCase):
         self.assertEqual(qs.count(), 1)
 
     def test_filter_to_invalid(self):
-        qs = self.ets.filter(to='not-my@mail.com')
+        qs = self.ets.filter(to="not-my@mail.com")
         self.assertEqual(qs.count(), 0)
 
     def test_filter_cc_invalid(self):
-        qs = self.ets.filter(cc='not-my@mail.com')
+        qs = self.ets.filter(cc="not-my@mail.com")
         self.assertEqual(qs.count(), 0)
 
     def test_filter_bcc_invalid(self):
-        qs = self.ets.filter(bcc='not-my@mail.com')
+        qs = self.ets.filter(bcc="not-my@mail.com")
         self.assertEqual(qs.count(), 0)
 
     def test_filter_subject_invalid(self):
-        qs = self.ets.filter(subject='Not my subject')
+        qs = self.ets.filter(subject="Not my subject")
         self.assertEqual(qs.count(), 0)
 
     def test_filter_to_cc_valid(self):
@@ -120,7 +120,7 @@ class EmailTestServiceTest(TestCase):
         self.assertEqual(qs.count(), 1)
 
     def test_filter_to_cc_bcc_subject_invalid(self):
-        qs = self.ets.filter(to=self.to, cc=self.cc, bcc=self.bcc, subject='Not my subject')
+        qs = self.ets.filter(to=self.to, cc=self.cc, bcc=self.bcc, subject="Not my subject")
         self.assertEqual(qs.count(), 0)
 
     def test_filter_subject_regular(self):
@@ -128,7 +128,7 @@ class EmailTestServiceTest(TestCase):
         self.assertEqual(qs.count(), 1)
 
     def test_filter_subject_regex_invalid(self):
-        qs = self.ets.filter(subject=re.compile('Not my subject'))
+        qs = self.ets.filter(subject=re.compile("Not my subject"))
         self.assertEqual(qs.count(), 0)
 
     def test_filter_subject_translatable(self):
@@ -136,11 +136,11 @@ class EmailTestServiceTest(TestCase):
         self.assertEqual(qs.count(), 1)
 
     def test_filter_subject_regex_valid_single(self):
-        qs = self.ets.filter(subject=re.compile('definitely not'))
+        qs = self.ets.filter(subject=re.compile("definitely not"))
         self.assertEqual(qs.count(), 1)
 
     def test_filter_subject_regex_valid_multiple(self):
-        qs = self.ets.filter(subject=re.compile('other|spam', flags=re.IGNORECASE))
+        qs = self.ets.filter(subject=re.compile("other|spam", flags=re.IGNORECASE))
         self.assertEqual(qs.count(), 2)
 
     def test_all(self):
@@ -177,7 +177,7 @@ class EmailTestServiceTest(TestCase):
     def test_count(self):
         self.assertEqual(self.ets.all().count(), 2)
         self.assertEqual(self.ets.filter(subject=self.subject).count(), 1)
-        self.assertEqual(self.ets.filter(subject='Not my subject').count(), 0)
+        self.assertEqual(self.ets.filter(subject="Not my subject").count(), 0)
 
     def test_first(self):
         self.assertEqual(self.ets.all().first().subject, self.subject)
@@ -211,17 +211,17 @@ class EmailTestServiceTest(TestCase):
 
     def test_assert_body_contains_false(self):
         with self.assertRaises(AssertionError):
-            self.ets.filter(subject=self.subject).assert_body_contains('Not in here!')
+            self.ets.filter(subject=self.subject).assert_body_contains("Not in here!")
 
     def test_assert_body_contains_not_true(self):
-        self.ets.filter(subject=self.subject).assert_body_contains_not('Not in here!')
+        self.ets.filter(subject=self.subject).assert_body_contains_not("Not in here!")
 
     def test_assert_body_contains_not_false(self):
         with self.assertRaises(AssertionError):
             self.ets.filter(subject=self.subject).assert_body_contains_not(self.content_part)
 
     def test_assert_body_contains_no_html_part(self):
-        subject = 'No html email'
+        subject = "No html email"
         email = EmailMultiAlternatives(subject, self.text_content, to=[self.to], cc=[self.cc], bcc=[self.bcc])
         mail.outbox.append(email)
 
