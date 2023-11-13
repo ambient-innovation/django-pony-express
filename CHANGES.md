@@ -1,5 +1,8 @@
 # Changelog
 
+* *1.2.5** (2023-11-13)
+  * Fixed wrong import path in docs
+
 * *1.2.4** (2023-11-03)
   * Switched formatter from `black` to `ruff`
 

@@ -27,7 +27,7 @@ Imagine you want to send a single email to a given user or to the system admins.
 end an email and worry about if the ``to`` field requires a list or string of emails... look at this example:
 
 ````
-from django_pony_express.mail.services.base import BaseEmailService
+from django_pony_express.services.base import BaseEmailService
 
 class MyFancyClassBasedMail(BaseEmailService):
     """

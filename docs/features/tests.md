@@ -16,7 +16,7 @@ can do this in the `setupTestData()`. It will be executed only once per test cla
 every test.
 
 ````python
-from django_pony_express.mail.services.tests import EmailTestService
+from django_pony_express.services.tests import EmailTestService
 from django.test import TestCase
 
 class MyTestClass(TestCase):
