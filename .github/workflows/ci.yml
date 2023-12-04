@@ -20,7 +20,6 @@ jobs:
 
       - name: Run pre-commit hooks
         run: pre-commit run --all-files --hook-stage push
-
   
 
   tests:
@@ -29,7 +28,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', ]
-        django-version: ['32', '41', '42', ]
+        django-version: ['32', '41', '42', '50', ]
 
         exclude:
           - python-version: '3.12'
@@ -79,4 +78,4 @@ jobs:
       - name: Combine coverage and fail if it's <100%
         run: |
           python -m coverage html --skip-covered --skip-empty
-          python -m coverage report --fail-under=100
+          python -m coverage report --fail-under=100.0
