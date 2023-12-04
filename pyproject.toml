@@ -39,7 +39,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-   'typer~=0.9freezegun~=1.2',
+   'typer~=0.9',
+   'freezegun~=1.2',
    'pytest-django~=4.5',
    'pytest-mock~=3.10',
    'coverage~=7.3',
@@ -49,7 +50,7 @@ dev = [
    'sphinx-rtd-theme==1.0.0',
    'm2r2==0.3.1',
    'mistune<2.0.0',
-   'ambient-package-update~=23.11.2',
+   'ambient-package-update~=23.12.1',
 ]
 
 [tool.flit.module]
