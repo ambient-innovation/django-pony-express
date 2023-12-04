@@ -1,5 +1,8 @@
 # Changelog
 
+* *1.3.0** (2023-12-04)
+  * Added Django 5.0 support
+
 * *1.2.5** (2023-11-13)
   * Fixed wrong import path in docs
 
