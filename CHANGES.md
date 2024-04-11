@@ -1,5 +1,9 @@
 # Changelog
 
+* *2.0.0* (2024-04-11)
+  * Dropped Django 3.2 & 4.1 support (via `ambient-package-update`)
+  * Internal updates via `ambient-package-update`
+
 * *1.3.0** (2023-12-04)
   * Added Django 5.0 support
 
