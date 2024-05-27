@@ -57,6 +57,7 @@ MIDDLEWARE = (
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 )
 
+USE_TZ = True
 TIME_ZONE = "UTC"
 
 LOCALE_PATHS = [str(BASE_PATH) + "/django_pony_express/locale"]

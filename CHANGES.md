@@ -5,6 +5,7 @@
   * Added basic logging with privacy configuration to mail class
   * Restructured documentation
   * Restructured unit-tests
+  * Minor test improvements
 
 * *2.0.0* (2024-04-11)
   * Dropped Django 3.2 & 4.1 support (via `ambient-package-update`)

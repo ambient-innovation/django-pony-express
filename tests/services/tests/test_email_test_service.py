@@ -200,32 +200,32 @@ class EmailTestServiceTest(TestCase):
             self.ets.filter(subject=self.subject).assert_quantity(0)
 
     def test_assert_subject_true(self):
-        self.ets.filter(subject=self.subject).assert_subject(self.subject)
+        self.ets.filter(subject=self.subject)[0].assert_subject(self.subject)
 
     def test_assert_subject_false(self):
         with self.assertRaises(AssertionError):
-            self.ets.filter(subject=self.subject).assert_subject(self.other_mail_subject)
+            self.ets.filter(subject=self.subject)[0].assert_subject(self.other_mail_subject)
 
     def test_assert_body_contains_true(self):
-        self.ets.filter(subject=self.subject).assert_body_contains(self.content_part)
+        self.ets.filter(subject=self.subject)[0].assert_body_contains(self.content_part)
 
     def test_assert_body_contains_false(self):
         with self.assertRaises(AssertionError):
-            self.ets.filter(subject=self.subject).assert_body_contains("Not in here!")
+            self.ets.filter(subject=self.subject)[0].assert_body_contains("Not in here!")
 
     def test_assert_body_contains_not_true(self):
-        self.ets.filter(subject=self.subject).assert_body_contains_not("Not in here!")
+        self.ets.filter(subject=self.subject)[0].assert_body_contains_not("Not in here!")
 
     def test_assert_body_contains_not_false(self):
         with self.assertRaises(AssertionError):
-            self.ets.filter(subject=self.subject).assert_body_contains_not(self.content_part)
+            self.ets.filter(subject=self.subject)[0].assert_body_contains_not(self.content_part)
 
     def test_assert_body_contains_no_html_part(self):
         subject = "No html email"
         email = EmailMultiAlternatives(subject, self.text_content, to=[self.to], cc=[self.cc], bcc=[self.bcc])
         mail.outbox.append(email)
 
-        self.ets.filter(subject=subject).assert_body_contains(self.content_part)
+        self.ets.filter(subject=subject)[0].assert_body_contains(self.content_part)
 
     def test_can_get_mail_via_item(self):
         mail_qs = self.ets.all()

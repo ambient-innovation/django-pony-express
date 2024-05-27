@@ -3,6 +3,7 @@ import warnings
 from typing import List
 
 from django.core import mail
+from django.core.mail import EmailMultiAlternatives
 from django.test import TestCase
 
 
@@ -156,9 +157,10 @@ class EmailTestServiceQuerySet(TestCase):
         super().__init__()
         self._match_list = matching_list
         for email in self._match_list or []:
-            # Change the class of every EmailMutliAlternative instance, so that it points to
+            # Change the class of every EmailMultiAlternative instance, so that it points to
             # our subclass, which has some additional assertion-methods.
-            email.__class__ = EmailTestServiceMail
+            if isinstance(email, EmailMultiAlternatives):
+                email.__class__ = EmailTestServiceMail
 
     def _get_html_content(self):
         """
