@@ -24,7 +24,7 @@ There are two scenarios covered by this package:
 Imagine you want to send a single email to a given user or to the system admins. Instead of having to deal with how to
 end an email and worry about if the ``to`` field requires a list or string of emails... look at this example:
 
-````
+````python
 from django_pony_express.services.base import BaseEmailService
 
 class MyFancyClassBasedMail(BaseEmailService):
@@ -49,7 +49,7 @@ you have to think to pass these variables every time. Now, just wrap it up in a 
 
 And that is how you would send the email:
 
-````
+````python
 from django.conf import settings
 
 email_service = MyFancyClassBasedMail(settings.MY_ADMIN_EMAIL_ADDRESS)
@@ -59,14 +59,13 @@ email_service.process()
 Optionally you can set the class attribute ``template_txt_name`` to define a plain text template. If not set, the HTML
 part will be used to render the plain text body.
 
-
 ## Attachments
 
 If you want to attach a number of files to your emails, you can do this in two ways.
 
 The simple way is passing an absolute file path to the constructor of the service:
 
-````
+````python
 email_service = MyMailService(
   ...
   attachment_list=[my_file_1, my_file_2]
@@ -75,7 +74,7 @@ email_service = MyMailService(
 
 If you want to customise the filename or even pass a mimetype, you can do as follows:
 
-````
+````python
 email_service = MyMailService(
   ...
   attachment_list=[{'filename': 'my_fancy_file.json', 'file': file_content, 'mimetype': 'application/json'}]
@@ -84,3 +83,29 @@ email_service = MyMailService(
 
 Please note that here the file content, not the file path, needs to be passed to the attachment list. If anything goes
 sideways, the service will throw an `EmailServiceAttachmentError` exception.
+
+## Async dispatching
+
+A general rule about external APIs is that you shouldn't talk to them in your main thread. You don't have any control
+over it, and it might be blocking your application. Therefore, it's wise to use some kind of asynchronous method to send
+your emails.
+
+The base class i this package can be used in an async way very simply. Call the process method of your email
+inheriting from `BaseEmailService` in, for example, a thread or celery task.
+
+### Python Threads
+
+If you don't want to do this, you can use the `ThreadEmailService` class, which will wrap the sending of your emails in
+a simple Python thread.
+
+````python
+from django_pony_express.services.asynchronous.thread import ThreadEmailService
+
+
+class MyThreadBasedEmail(ThreadEmailService):
+    pass
+````
+
+### Other methods
+
+In the future, we'll add a base class for Celery and maybe django-q / django-q2.
