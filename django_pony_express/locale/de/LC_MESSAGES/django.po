@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-03 15:32+0200\n"
+"POT-Creation-Date: 2024-05-27 17:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,26 +18,46 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\django_pony_express\services\base.py:42
+#: .\django_pony_express\services\base.py:44
 msgid "Email factory requires a mail service class."
 msgstr "E-Mailfactory benötigt eine Mailservice-Klasse."
 
-#: .\django_pony_express\services\base.py:44
+#: .\django_pony_express\services\base.py:46
 msgid "Email factory requires a target mail address."
 msgstr "E-Mailfactory benötigt eine Ziel-Mailadresse."
 
-#: .\django_pony_express\services\base.py:212
+#: .\django_pony_express\services\base.py:225
 msgid "Missing or mislabeled data provided for email attachment."
 msgstr "Fehlende oder falsch deklarierte Daten für E-Mailanhänge übergeben."
 
-#: .\django_pony_express\services\base.py:269
+#: .\django_pony_express\services\base.py:282
 msgid "Email service requires a subject."
 msgstr "E-Mailservice benötigt einen Betreff."
 
-#: .\django_pony_express\services\base.py:271
+#: .\django_pony_express\services\base.py:284
 msgid "Email service requires a template."
 msgstr "E-Mailservice benötigt ein Template."
 
-#: .\django_pony_express\services\base.py:273
+#: .\django_pony_express\services\base.py:286
 msgid "Email service requires a target mail address."
 msgstr "E-Mailservice benötigt eine Ziel-Mailadresse."
+
+#: .\django_pony_express\services\base.py:316
+#, python-format
+msgid "Email \"%s\" successfully sent to %s."
+msgstr "E-Mail \"%s\" erfolgreich versendet an %s."
+
+#: .\django_pony_express\services\base.py:318
+#, python-format
+msgid "Email \"%s\" successfully sent."
+msgstr "E-Mail \"%s\" erfolgreich versendet."
+
+#: .\django_pony_express\services\base.py:322
+#, python-format
+msgid "An error occurred sending email \"%s\" to %s: %s"
+msgstr "Beim Versenden der E-Mail \"%s\" an %s ist ein Fehler aufgetreten: %s"
+
+#: .\django_pony_express\services\base.py:325
+#, python-format
+msgid "An error occurred sending email \"%s\": %s"
+msgstr "Beim Versenden der E-Mail \"%s\" ist ein Fehler aufgetreten: %s"

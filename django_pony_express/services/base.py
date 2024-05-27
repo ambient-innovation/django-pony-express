@@ -1,3 +1,4 @@
+import logging
 from typing import Union
 
 import html2text
@@ -8,7 +9,8 @@ from django.template.loader import render_to_string
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 
-from ..errors import EmailServiceAttachmentError, EmailServiceConfigError
+from django_pony_express.errors import EmailServiceAttachmentError, EmailServiceConfigError
+from django_pony_express.settings import PONY_LOG_RECIPIENTS, PONY_LOGGER_NAME
 
 
 class BaseEmailServiceFactory:
@@ -111,6 +113,7 @@ class BaseEmailService:
     REPLY_TO_ADDRESS = []
 
     _errors = []
+    _logger: logging.Logger = None
 
     subject = None
     template_name = None
@@ -133,6 +136,7 @@ class BaseEmailService:
         """
         # Empty error list on initialisation
         self._errors = []
+        self._logger = self._get_logger()
 
         super().__init__()
 
@@ -143,6 +147,10 @@ class BaseEmailService:
         self.recipient_email_list = recipient_email_list if recipient_email_list else []
         self.context_data = context_data if context_data else {}
         self.attachment_list = attachment_list if attachment_list else []
+
+    def _get_logger(self) -> logging.Logger:
+        self._logger = logging.getLogger(PONY_LOGGER_NAME) if self._logger is None else self._logger
+        return self._logger
 
     def get_context_data(self) -> dict:
         """
@@ -296,6 +304,28 @@ class BaseEmailService:
         """
         return self._errors
 
+    def _send_and_log_email(self, msg: EmailMultiAlternatives) -> bool:
+        """
+        Method to be called by the thread. Enables logging since we won't have any sync return values.
+        """
+        result = False
+        recipients_as_string = " ".join(self.recipient_email_list)
+        try:
+            result = msg.send()
+            if PONY_LOG_RECIPIENTS:
+                self._logger.debug(_('Email "%s" successfully sent to %s.') % (msg.subject, recipients_as_string))
+            else:
+                self._logger.debug(_('Email "%s" successfully sent.') % msg.subject)
+        except Exception as e:
+            if PONY_LOG_RECIPIENTS:
+                self._logger.error(
+                    _('An error occurred sending email "%s" to %s: %s') % (msg.subject, recipients_as_string, str(e))
+                )
+            else:
+                self._logger.error(_('An error occurred sending email "%s": %s') % (msg.subject, str(e)))
+
+        return result
+
     def process(self, raise_exception: bool = True) -> bool:
         """
         Public method which is called to actually send an email. Calls validation first and returns the result of
@@ -304,6 +334,6 @@ class BaseEmailService:
         result = False
         if self.is_valid(raise_exception=raise_exception):
             msg = self._build_mail_object()
-            result = msg.send()
+            result = self._send_and_log_email(msg=msg)
 
         return result

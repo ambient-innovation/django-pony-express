@@ -1,4 +1,6 @@
+import logging
 from os.path import basename
+from unittest import mock
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -6,85 +8,7 @@ from django.test import TestCase, override_settings
 from freezegun import freeze_time
 
 from django_pony_express.errors import EmailServiceAttachmentError, EmailServiceConfigError
-from django_pony_express.services.base import BaseEmailService, BaseEmailServiceFactory
-
-
-class BaseEmailServiceFactoryTest(TestCase):
-    class TestMailService(BaseEmailService):
-        subject = "My subject"
-        template_name = "testapp/test_email.html"
-
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-
-    def test_init_recipient_list_is_set(self):
-        email = "albertus.magnus@example.com"
-        factory = BaseEmailServiceFactory([email])
-        self.assertEqual(factory.recipient_email_list, [email])
-
-    def test_is_valid_positive_case(self):
-        email = "albertus.magnus@example.com"
-        factory = BaseEmailServiceFactory(recipient_email_list=[email])
-        factory.service_class = BaseEmailService
-        self.assertTrue(factory.is_valid())
-
-    def test_is_valid_no_recipients(self):
-        factory = BaseEmailServiceFactory()
-        factory.service_class = BaseEmailService
-        with self.assertRaises(EmailServiceConfigError):
-            factory.is_valid()
-
-    def test_is_valid_no_service_class(self):
-        email = "albertus.magnus@example.com"
-        factory = BaseEmailServiceFactory(recipient_email_list=[email])
-        with self.assertRaises(EmailServiceConfigError):
-            factory.is_valid()
-
-    def test_is_valid_no_exception_raised(self):
-        factory = BaseEmailServiceFactory()
-        factory.is_valid(raise_exception=False)
-        self.assertEqual(len(factory.errors), 2)
-
-    def test_has_errors_positive_case(self):
-        factory = BaseEmailServiceFactory()
-        factory.is_valid(raise_exception=False)
-        self.assertTrue(factory.has_errors())
-
-    def test_has_errors_negative_case(self):
-        email = "albertus.magnus@example.com"
-        factory = BaseEmailServiceFactory(recipient_email_list=[email])
-        factory.service_class = BaseEmailService
-        self.assertFalse(factory.has_errors())
-
-    def test_get_recipient_list_regular(self):
-        email_1 = "albertus.magnus@example.com"
-        email_2 = "thomas.von.aquin@example.com"
-        factory = BaseEmailServiceFactory(recipient_email_list=[email_1, email_2])
-        self.assertEqual(factory.get_recipient_list(), [email_1, email_2])
-
-    def test_get_email_from_recipient_regular(self):
-        email_1 = "albertus.magnus@example.com"
-        email_2 = "thomas.von.aquin@example.com"
-        factory = BaseEmailServiceFactory(recipient_email_list=[email_1, email_2])
-        self.assertEqual(factory.get_email_from_recipient(factory.get_recipient_list()[1]), email_2)
-
-    def test_get_context_data_regular(self):
-        factory = BaseEmailServiceFactory()
-        self.assertEqual(factory.get_context_data(), {})
-
-    def test_process_regular(self):
-        email_1 = "albertus.magnus@example.com"
-        email_2 = "thomas.von.aquin@example.com"
-        factory = BaseEmailServiceFactory(recipient_email_list=[email_1, email_2])
-        factory.service_class = self.TestMailService
-        self.assertEqual(factory.process(), 2)
-
-    def test_process_with_excepetion(self):
-        factory = BaseEmailServiceFactory()
-        factory.service_class = self.TestMailService
-        with self.assertRaises(EmailServiceConfigError):
-            factory.process()
+from django_pony_express.services.base import BaseEmailService
 
 
 class BaseEmailServiceTest(TestCase):
@@ -102,6 +26,17 @@ class BaseEmailServiceTest(TestCase):
         self.assertEqual(service.recipient_email_list, [])
         self.assertEqual(service.context_data, {})
 
+    def test_get_logger_logger_not_set(self):
+        service = BaseEmailService()
+        email_logger = service._get_logger()
+        self.assertEqual(service._logger, email_logger)
+
+    def test_get_logger_logger_set(self):
+        service = BaseEmailService()
+        service._logger = logging.getLogger("my_logger")
+        email_logger = service._get_logger()
+        self.assertEqual(service._logger, email_logger)
+
     def test_get_context_data_regular(self):
         data = {"city": "Cologne"}
         service = BaseEmailService(context_data=data)
@@ -114,7 +49,7 @@ class BaseEmailServiceTest(TestCase):
         self.assertEqual(service.get_subject(), subject)
 
     def test_get_subject_with_prefix(self):
-        prefix = "Ai: Core"
+        prefix = "Pony Express"
         subject = "I am a subject!"
         service = BaseEmailService()
         service.SUBJECT_PREFIX = prefix
@@ -372,6 +307,55 @@ class BaseEmailServiceTest(TestCase):
         service.subject = subject
         service.template_name = "testapp/test_email.html"
         self.assertFalse(service.has_errors())
+
+    @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
+    def test_send_and_log_email_success_privacy_active(self, mock_logger):
+        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
+        result = service._send_and_log_email(
+            msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
+        )
+
+        mock_logger.debug.assert_called_with('Email "The Pony Express" successfully sent.')
+        self.assertEqual(result, 1)
+
+    @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
+    @mock.patch("django_pony_express.services.base.PONY_LOG_RECIPIENTS", True)
+    def test_send_and_log_success_privacy_inactive(self, mock_logger):
+        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
+        result = service._send_and_log_email(
+            msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
+        )
+
+        mock_logger.debug.assert_called_with('Email "The Pony Express" successfully sent to thomas.aquin@example.com.')
+        self.assertEqual(result, 1)
+
+    @mock.patch.object(EmailMultiAlternatives, "send", side_effect=Exception("Broken pony"))
+    @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
+    def test_send_and_log_email_failure_privacy_active(self, mock_logger, *args):
+        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
+        result = service._send_and_log_email(
+            msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
+        )
+
+        mock_logger.error('An error occurred sending email "%s": %s', "The Pony Express", "Broken pony")
+        self.assertFalse(result)
+
+    @mock.patch.object(EmailMultiAlternatives, "send", side_effect=Exception("Broken pony"))
+    @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
+    @mock.patch("django_pony_express.services.base.PONY_LOG_RECIPIENTS", True)
+    def test_send_and_log_failure_privacy_inactive(self, mock_logger, *args):
+        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
+        result = service._send_and_log_email(
+            msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
+        )
+
+        mock_logger.error(
+            'An error occurred sending email "%s" to %s: %s',
+            "The Pony Express",
+            "thomas.aquin@example.com",
+            "Broken pony",
+        )
+        self.assertFalse(result)
 
     def test_process_regular(self):
         email = "albertus.magnus@example.com"
