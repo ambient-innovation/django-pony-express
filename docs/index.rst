@@ -7,7 +7,10 @@ django-pony-express
    :maxdepth: 1
    :caption: Contents:
 
-   features/mail.md
+   features/introduction.md
+   features/configuration.md
+   features/factories.md
+   features/internal_api.md
    features/tests.md
    features/changelog.rst
 
