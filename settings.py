@@ -60,3 +60,7 @@ MIDDLEWARE = (
 TIME_ZONE = "UTC"
 
 LOCALE_PATHS = [str(BASE_PATH) + "/django_pony_express/locale"]
+
+
+# Pony express
+DJANGO_PONY_EXPRESS_LOG_RECIPIENTS = False

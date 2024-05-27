@@ -309,7 +309,6 @@ class BaseEmailService:
         """
         Method to be called by the thread. Enables logging since we won't have any sync return values.
         """
-        # TODO(RV): test me
         result = False
         recipients_as_string = " ".join(self.recipient_email_list)
         try:
