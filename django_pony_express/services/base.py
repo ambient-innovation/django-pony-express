@@ -9,9 +9,8 @@ from django.template.loader import render_to_string
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 
+from django_pony_express.errors import EmailServiceAttachmentError, EmailServiceConfigError
 from django_pony_express.settings import PONY_LOG_RECIPIENTS, PONY_LOGGER_NAME
-
-from ..errors import EmailServiceAttachmentError, EmailServiceConfigError
 
 
 class BaseEmailServiceFactory:

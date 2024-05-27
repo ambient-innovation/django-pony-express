@@ -345,7 +345,7 @@ class BaseEmailServiceTest(TestCase):
     @mock.patch.object(EmailMultiAlternatives, "send", side_effect=Exception("Broken pony"))
     @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
     @mock.patch("django_pony_express.services.base.PONY_LOG_RECIPIENTS", True)
-    def test_send_and_log_success_privacy_inactive(self, mock_logger, *args):
+    def test_send_and_log_failure_privacy_inactive(self, mock_logger, *args):
         service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
         result = service._send_and_log_email(
             msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])

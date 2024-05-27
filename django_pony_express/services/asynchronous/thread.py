@@ -13,7 +13,6 @@ class ThreadEmailService(BaseEmailService):
         Public method which is called to actually send an email.
         Calls validation first and returns the result of "msg.send()"
         """
-        # TODO(RV): test me
         if self.is_valid(raise_exception=raise_exception):
             msg = self._build_mail_object()
             email_thread = threading.Thread(target=self._send_and_log_email, args=(msg,))
