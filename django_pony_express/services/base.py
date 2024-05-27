@@ -313,16 +313,16 @@ class BaseEmailService:
         try:
             result = msg.send()
             if PONY_LOG_RECIPIENTS:
-                self._logger.debug(_('Email "%s" successfully sent to %s.'), msg.subject, recipients_as_string)
+                self._logger.debug(_('Email "%s" successfully sent to %s.') % (msg.subject, recipients_as_string))
             else:
-                self._logger.debug(_('Email "%s" successfully sent.'), msg.subject)
+                self._logger.debug(_('Email "%s" successfully sent.') % msg.subject)
         except Exception as e:
             if PONY_LOG_RECIPIENTS:
                 self._logger.error(
-                    _('An error occurred sending email "%s" to %s: %s'), msg.subject, recipients_as_string, str(e)
+                    _('An error occurred sending email "%s" to %s: %s') % (msg.subject, recipients_as_string, str(e))
                 )
             else:
-                self._logger.error(_('An error occurred sending email "%s": %s'), msg.subject, str(e))
+                self._logger.error(_('An error occurred sending email "%s": %s') % (msg.subject, str(e)))
 
         return result
 
