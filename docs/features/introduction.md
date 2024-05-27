@@ -90,7 +90,7 @@ A general rule about external APIs is that you shouldn't talk to them in your ma
 over it, and it might be blocking your application. Therefore, it's wise to use some kind of asynchronous method to send
 your emails.
 
-The base class i this package can be used in an async way very simply. Call the process method of your email
+The base class in this package can be used in an async way very simply. Call the process method of your email
 inheriting from `BaseEmailService` in, for example, a thread or celery task.
 
 ### Python Threads
