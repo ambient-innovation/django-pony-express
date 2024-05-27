@@ -1,6 +1,6 @@
 import threading
 
-from services.base import BaseEmailService
+from django_pony_express.services.base import BaseEmailService
 
 
 class ThreadEmailService(BaseEmailService):
