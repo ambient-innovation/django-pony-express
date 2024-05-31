@@ -313,9 +313,9 @@ class BaseEmailService:
         try:
             result = msg.send()
             if PONY_LOG_RECIPIENTS:
-                self._logger.debug(_('Email "%s" successfully sent to %s.') % (msg.subject, recipients_as_string))
+                self._logger.info(_('Email "%s" successfully sent to %s.') % (msg.subject, recipients_as_string))
             else:
-                self._logger.debug(_('Email "%s" successfully sent.') % msg.subject)
+                self._logger.info(_('Email "%s" successfully sent.') % msg.subject)
         except Exception as e:
             if PONY_LOG_RECIPIENTS:
                 self._logger.error(

@@ -18,7 +18,7 @@ LOGGING = {
     "loggers": {
         "django_pony_express": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": "DEBUG",
             "propagate": True,
         },
         ...

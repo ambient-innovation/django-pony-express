@@ -1,5 +1,9 @@
 # Changelog
 
+* *2.1.1* (2024-05-31)
+  * Changed log-level to "info" for successful dispatching
+  * Improved configuration docs
+
 * *2.1.0* (2024-05-27)
   * Added `ThreadEmailService` for simple async sending of emails
   * Added basic logging with privacy configuration to mail class

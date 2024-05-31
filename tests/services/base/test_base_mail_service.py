@@ -315,7 +315,7 @@ class BaseEmailServiceTest(TestCase):
             msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
         )
 
-        mock_logger.debug.assert_called_with('Email "The Pony Express" successfully sent.')
+        mock_logger.info.assert_called_with('Email "The Pony Express" successfully sent.')
         self.assertEqual(result, 1)
 
     @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
@@ -326,7 +326,7 @@ class BaseEmailServiceTest(TestCase):
             msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
         )
 
-        mock_logger.debug.assert_called_with('Email "The Pony Express" successfully sent to thomas.aquin@example.com.')
+        mock_logger.info.assert_called_with('Email "The Pony Express" successfully sent to thomas.aquin@example.com.')
         self.assertEqual(result, 1)
 
     @mock.patch.object(EmailMultiAlternatives, "send", side_effect=Exception("Broken pony"))
