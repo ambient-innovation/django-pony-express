@@ -1,5 +1,8 @@
 # Changelog
 
+* *2.1.2* (2024-06-14)
+  * Updates via ambient-package updater
+
 * *2.1.1* (2024-05-31)
   * Changed log-level to "info" for successful dispatching
   * Improved configuration docs

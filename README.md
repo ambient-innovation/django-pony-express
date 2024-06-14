@@ -14,7 +14,7 @@ emails in Django.
 * [PyPI](https://pypi.org/project/django-pony-express/)
 * [GitHub](https://github.com/ambient-innovation/django-pony-express)
 * [Full documentation](https://django-pony-express.readthedocs.io/en/latest/index.html)
-* Creator & Maintainer: [Ambient Digital](https://ambient.digital)
+* Creator & Maintainer: [Ambient Digital](https://ambient.digital/)
 
 ## Features
 
@@ -121,6 +121,7 @@ Example: run all hooks of pre-push stage
 - To build the documentation run: `sphinx-build docs/ docs/_build/html/`.
 - Open `docs/_build/html/index.html` to see the documentation.
 
+
 ### Translation files
 
 If you have added custom text, make sure to wrap it in `_()` where `_` is
@@ -137,6 +138,7 @@ How to compile translation files:
 * Navigate to `django-pony-express`
 * `python manage.py compilemessages`
 * Have a look at the new/changed files within `django_pony_express/locale`
+
 
 ### Publish to ReadTheDocs.io
 
