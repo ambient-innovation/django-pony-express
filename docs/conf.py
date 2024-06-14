@@ -37,7 +37,7 @@ from django_pony_express import __version__  # noqa: E402
 
 project = "django-pony-express"
 copyright = "2024, Ambient Innovation: GmbH"  # noqa: A001
-author = "Ambient Innovation: GmbH <hello@ambient.digital>"
+author = "Ambient Digital <hello@ambient.digital>"
 version = __version__
 release = __version__
 

@@ -5,18 +5,21 @@ from ambient_package_update.metadata.constants import (
     SUPPORTED_DJANGO_VERSIONS,
     SUPPORTED_PYTHON_VERSIONS,
 )
+from ambient_package_update.metadata.maintainer import PackageMaintainer
 from ambient_package_update.metadata.package import PackageMetadata
 from ambient_package_update.metadata.readme import ReadmeContent
 from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredInspection
 
 METADATA = PackageMetadata(
     package_name="django_pony_express",
+    module_name="django_pony_express",
     authors=[
         PackageAuthor(
             name="Ambient Digital",
             email="hello@ambient.digital",
         ),
     ],
+    maintainer=PackageMaintainer(name="Ambient Digital", url="https://ambient.digital/", email="hello@ambient.digital"),
     company="Ambient Innovation: GmbH",
     license=LICENSE_GPL,
     license_year=2023,
