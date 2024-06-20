@@ -16,6 +16,7 @@ emails in Django.
 * [Full documentation](https://django-pony-express.readthedocs.io/en/latest/index.html)
 * Creator & Maintainer: [Ambient Digital](https://ambient.digital/)
 
+
 ## Features
 
 * Class-based structure for emails
@@ -38,7 +39,6 @@ Ingenious, right?
 
 ## Installation
 
-
 - Install the package via pip:
 
   `pip install django-pony-express`
@@ -55,7 +55,6 @@ Ingenious, right?
         'django_pony_express',
     )
      ````
-
 
 
 
@@ -176,3 +175,4 @@ being rendered by this updater. It works similar to well-known updaters like `py
 
 To run an update, refer to the [documentation page](https://pypi.org/project/ambient-package-update/)
 of the "ambient-package-update".
+
