@@ -76,8 +76,8 @@ If you want to customise the filename or even pass a mimetype, you can do as fol
 
 ````python
 email_service = MyMailService(
-  ...
-  attachment_list=[{'filename': 'my_fancy_file.json', 'file': file_content, 'mimetype': 'application/json'}]
+  ...,
+  attachment_list=[{'filename': 'my_fancy_file.json', 'file': file_content, 'mimetype': 'application/json'}],
 )
 ````
 
