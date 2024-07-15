@@ -1,6 +1,10 @@
 # Changelog
 
-* *2.1.3* (2024-06-14)
+* *2.2.0* (2024-07-15)
+  * Dropped Python 3.8 support
+  * Added multiple ruff linters
+
+* *2.1.3* (2024-06-21)
   * Linted docs with `blacken-docs` via `ambient-package-update`
 
 * *2.1.2* (2024-06-14)

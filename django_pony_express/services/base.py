@@ -1,5 +1,5 @@
 import logging
-from typing import Union
+from typing import Optional, Union
 
 import html2text
 from django.conf import settings
@@ -125,9 +125,9 @@ class BaseEmailService:
 
     def __init__(
         self,
-        recipient_email_list: Union[list, tuple, str] = None,
-        context_data: dict = None,
-        attachment_list: list = None,
+        recipient_email_list: Optional[Union[list, tuple, str]] = None,
+        context_data: Optional[dict] = None,
+        attachment_list: Optional[list] = None,
         **kwargs,
     ) -> None:
         """
@@ -316,13 +316,13 @@ class BaseEmailService:
                 self._logger.info(_('Email "%s" successfully sent to %s.') % (msg.subject, recipients_as_string))
             else:
                 self._logger.info(_('Email "%s" successfully sent.') % msg.subject)
-        except Exception as e:
+        except Exception:
             if PONY_LOG_RECIPIENTS:
-                self._logger.error(
-                    _('An error occurred sending email "%s" to %s: %s') % (msg.subject, recipients_as_string, str(e))
+                self._logger.exception(
+                    _('An error occurred sending email "%s" to "%s".') % (msg.subject, recipients_as_string)
                 )
             else:
-                self._logger.error(_('An error occurred sending email "%s": %s') % (msg.subject, str(e)))
+                self._logger.exception(_('An error occurred sending email "%s".') % msg.subject)
 
         return result
 

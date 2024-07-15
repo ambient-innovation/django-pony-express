@@ -41,11 +41,11 @@ Ingenious, right?
 
 - Install the package via pip:
 
-  `pip install django-pony-express`
+  `pip install django_pony_express`
 
   or via pipenv:
 
-  `pipenv install django-pony-express`
+  `pipenv install django_pony_express`
 
 - Add module to `INSTALLED_APPS` within the main django `settings.py`:
 

@@ -27,7 +27,7 @@ METADATA = PackageMetadata(
     has_migrations=False,
     readme_content=ReadmeContent(uses_internationalisation=True),
     dependencies=[
-        "Django>=3.2",
+        f"Django>={SUPPORTED_DJANGO_VERSIONS[0]}",
         "html2text>=2020.1.16",
     ],
     supported_django_versions=SUPPORTED_DJANGO_VERSIONS,
@@ -42,5 +42,9 @@ METADATA = PackageMetadata(
         RuffIgnoredInspection(key="A003", comment="Django attributes shadow python builtins"),
         RuffIgnoredInspection(key="DJ001", comment="Django model text-based fields shouldn't be nullable"),
         RuffIgnoredInspection(key="B905", comment="Can be enabled when Python <=3.9 support is dropped"),
+        RuffIgnoredInspection(
+            key="RUF012", comment="Mutable class attributes should be annotated with `typing.ClassVar`"
+        ),
+        RuffIgnoredInspection(key="TRY003", comment="Avoid specifying long messages outside the exception class"),
     ],
 )

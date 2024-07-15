@@ -1,6 +1,6 @@
 import re
 import warnings
-from typing import List
+from typing import Optional
 
 from django.core import mail
 from django.core.mail import EmailMultiAlternatives
@@ -145,7 +145,7 @@ class EmailTestServiceMail(mail.EmailMultiAlternatives):
         # Assert string is contained in TXT part
         self._testcase.assertNotIn(search_str, self._get_txt_content(), msg=msg)
 
-    def assert_to_contains(self, *emails: List[str]):
+    def assert_to_contains(self, *emails: list[str]):
         for email in emails:
             self._testcase.assertIn(email, self.to)
 
@@ -236,20 +236,20 @@ class EmailTestServiceQuerySet(TestCase):
         self._ensure_matching_list_was_populated()
         return self[-1] if self.count() > 0 else False
 
-    def assert_one(self, msg: str = None):
+    def assert_one(self, msg: Optional[str] = None):
         """
         Makes an assertion to make sure queried element exists exactly once
         """
         self.assertEqual(self.one(), True, msg=msg)
 
-    def assert_quantity(self, target_quantity: str, msg: str = None):
+    def assert_quantity(self, target_quantity: str, msg: Optional[str] = None):
         """
         Makes an assertion to make sure that amount of queried mails are equal to `target_quantity`
         :return:
         """
         self.assertEqual(self.count(), target_quantity, msg=msg)
 
-    def assert_subject(self, subject: str, msg: str = None):
+    def assert_subject(self, subject: str, msg: Optional[str] = None):
         """
         Searches in a given email inside the HTML AND TXT part for a given string
         """
@@ -261,7 +261,7 @@ class EmailTestServiceQuerySet(TestCase):
         self._validate_lookup_cache_contains_one_element()
         self[0].assert_subject(subject, msg)
 
-    def assert_body_contains(self, search_str: str, msg: str = None):
+    def assert_body_contains(self, search_str: str, msg: Optional[str] = None):
         """
         Searches in a given email inside the HTML AND TXT part for a given string
         """
@@ -274,7 +274,7 @@ class EmailTestServiceQuerySet(TestCase):
         self._validate_lookup_cache_contains_one_element()
         self[0].assert_body_contains(search_str, msg)
 
-    def assert_body_contains_not(self, search_str: str, msg: str = None):
+    def assert_body_contains_not(self, search_str: str, msg: Optional[str] = None):
         """
         Searches in a given email inside the HTML AND TXT part for a given string
         """
