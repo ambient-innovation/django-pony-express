@@ -1,5 +1,8 @@
 # Changelog
 
+* *2.2.1* (2024-07-16)
+  * Updated GitHub actions
+
 * *2.2.0* (2024-07-15)
   * Dropped Python 3.8 support
   * Added multiple ruff linters
