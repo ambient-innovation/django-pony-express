@@ -12,7 +12,7 @@ from ambient_package_update.metadata.ruff_ignored_inspection import RuffIgnoredI
 
 METADATA = PackageMetadata(
     package_name="django_pony_express",
-    module_name="django_pony_express",
+    github_package_group="ambient-innovation",
     authors=[
         PackageAuthor(
             name="Ambient Digital",

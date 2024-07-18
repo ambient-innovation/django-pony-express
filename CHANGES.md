@@ -1,5 +1,10 @@
 # Changelog
 
+* *2.2.2* (2024-07-18)
+  * Added SECURITY.md
+  * Updated linters
+  * Internal updates via `ambient-package-update`
+
 * *2.2.1* (2024-07-16)
   * Updated GitHub actions
 
