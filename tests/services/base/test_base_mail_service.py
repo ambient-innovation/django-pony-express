@@ -60,7 +60,7 @@ class BaseEmailServiceTest(TestCase):
 
     def test_get_subject_with_prefix_and_custom_delimiter(self):
         prefix = "Pony Express"
-        custom_delimiter = "|"
+        custom_delimiter = " | "
         subject = "I am a subject!"
         service = BaseEmailService()
         service.SUBJECT_PREFIX = prefix
