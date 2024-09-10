@@ -109,6 +109,7 @@ class BaseEmailService:
     """
 
     SUBJECT_PREFIX = None
+    SUBJECT_DELIMITER = " - "
     FROM_EMAIL = None
     REPLY_TO_ADDRESS = []
 
@@ -165,7 +166,7 @@ class BaseEmailService:
         emails. Can be overridden if required.
         """
         if self.SUBJECT_PREFIX:
-            return f"{self.SUBJECT_PREFIX} - {self.subject}"
+            return f"{self.SUBJECT_PREFIX}{self.SUBJECT_DELIMITER}{self.subject}"
         return self.subject
 
     def get_from_email(self) -> str:

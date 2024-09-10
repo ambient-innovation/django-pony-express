@@ -10,7 +10,7 @@
 
 
 * ``get_subject()``
-  This method combines the constant ``SUBJECT_PREFIX`` with the variable `subject`. Can be overwritten, if required.
+  This method combines the constants ``SUBJECT_PREFIX`` and ``SUBJECT_DELIMITER`` with the variable `subject`. Can be overwritten, if required.
 
 
 * ``get_from_email()``
