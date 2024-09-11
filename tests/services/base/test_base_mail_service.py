@@ -5,6 +5,7 @@ from unittest import mock
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.test import TestCase, override_settings
+from django.utils import translation
 from freezegun import freeze_time
 
 from django_pony_express.errors import EmailServiceAttachmentError, EmailServiceConfigError
@@ -228,6 +229,21 @@ class BaseEmailServiceTest(TestCase):
         self.assertEqual(len(msg_obj.attachments), 1)
         self.assertEqual(msg_obj.attachments[0][0], basename(file_path))
 
+    @mock.patch.object(BaseEmailService, "get_translation", return_value=None)
+    def test_build_mail_object_missing_language(self, *args):
+        email = "albertus.magnus@example.com"
+        my_var = "Lorem ipsum dolor!"
+        file_path = settings.BASE_PATH / "tests/files/testfile.txt"
+        service = BaseEmailService(
+            recipient_email_list=[email], context_data={"my_var": my_var}, attachment_list=[file_path]
+        )
+
+        service.template_name = "testapp/test_email.html"
+
+        with mock.patch.object(translation, "activate") as mocked_activate:
+            service._build_mail_object()
+            mocked_activate.assert_not_called()
+
     def test_setting_txt_templates_works(self):
         my_var = "Lorem ipsum dolor!"
         service = BaseEmailService(
@@ -372,3 +388,8 @@ class BaseEmailServiceTest(TestCase):
         service.template_name = "testapp/test_email.html"
         with self.assertRaises(EmailServiceConfigError):
             service.process()
+
+    @mock.patch.object(BaseEmailService, "is_valid", return_value=False)
+    def test_process_is_valid_invalid(self, *args):
+        factory = BaseEmailService()
+        self.assertEqual(factory.process(), 0)
