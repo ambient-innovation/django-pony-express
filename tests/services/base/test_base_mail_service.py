@@ -56,6 +56,19 @@ class BaseEmailServiceTest(TestCase):
         service.SUBJECT_PREFIX = prefix
         service.subject = subject
         self.assertIn(prefix, service.get_subject())
+        self.assertIn(service.SUBJECT_DELIMITER, service.get_subject())
+        self.assertIn(subject, service.get_subject())
+
+    def test_get_subject_with_prefix_and_custom_delimiter(self):
+        prefix = "Pony Express"
+        custom_delimiter = " | "
+        subject = "I am a subject!"
+        service = BaseEmailService()
+        service.SUBJECT_PREFIX = prefix
+        service.SUBJECT_DELIMITER = custom_delimiter
+        service.subject = subject
+        self.assertIn(prefix, service.get_subject())
+        self.assertIn(custom_delimiter, service.get_subject())
         self.assertIn(subject, service.get_subject())
 
     @override_settings(DEFAULT_FROM_EMAIL="noreply@example.com")
