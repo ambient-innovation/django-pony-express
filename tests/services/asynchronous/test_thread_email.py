@@ -17,3 +17,15 @@ class ThreadEmailServiceTest(TestCase):
 
         self.assertIsNone(service.process())
         mocked_start.assert_called_once()
+
+    @mock.patch.object(Thread, "start")
+    @mock.patch.object(ThreadEmailService, "is_valid", return_value=False)
+    def test_process_invalid(self, mocked_service, mocked_start):
+        email = "albertus.magnus@example.com"
+        subject = "Test email"
+        service = ThreadEmailService(recipient_email_list=[email])
+        service.subject = subject
+        service.template_name = "testapp/test_email.html"
+
+        self.assertIsNone(service.process())
+        mocked_start.assert_not_called()

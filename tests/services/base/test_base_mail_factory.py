@@ -1,3 +1,5 @@
+from unittest import mock
+
 from django.test import TestCase
 
 from django_pony_express.errors import EmailServiceConfigError
@@ -80,3 +82,9 @@ class BaseEmailServiceFactoryTest(TestCase):
         factory.service_class = self.TestMailService
         with self.assertRaises(EmailServiceConfigError):
             factory.process()
+
+    @mock.patch.object(BaseEmailServiceFactory, "is_valid", return_value=False)
+    def test_process_is_valid_invalid(self, *args):
+        factory = BaseEmailServiceFactory()
+        factory.service_class = self.TestMailService
+        self.assertEqual(factory.process(), 0)
