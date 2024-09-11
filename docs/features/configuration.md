@@ -2,7 +2,7 @@
 
 ## Default "FROM"
 
-You can set a subject prefix, so that all your emails look more similar when setting the constant ``SUBJECT_PREFIX``.
+You can set a subject prefix, so that all your emails look more similar when setting the constant ``SUBJECT_PREFIX``.\
 Additionally, you can define a custom `SUBJECT_DELIMITER`, which will be added between your custom `SUBJECT_PREFIX` and your `subject`.
 
 If you wish to define a custom "from" email, you can do so via the ``FROM_EMAIL`` constant. Take care:
