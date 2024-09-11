@@ -3,6 +3,7 @@ name: Unit tests
 on:
   push:
     branches: [ '**' ]
+  pull_request:
 
 jobs:
   linting:
@@ -20,7 +21,7 @@ jobs:
 
       - name: Run pre-commit hooks
         run: pre-commit run --all-files --hook-stage push
-  
+
 
   tests:
     name: Python ${{ matrix.python-version }}, django ${{ matrix.django-version }}
