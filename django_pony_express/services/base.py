@@ -123,6 +123,7 @@ class BaseEmailService:
     cc_email_list = []
     bcc_email_list = []
     attachment_list = []
+    connection = None
 
     def __init__(
         self,
@@ -265,6 +266,7 @@ class BaseEmailService:
             bcc=self.get_bcc_emails(),
             reply_to=self.get_reply_to_emails(),
             to=self.recipient_email_list,
+            connection=self.connection,
         )
         msg.attach_alternative(html_content, "text/html")
 
