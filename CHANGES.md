@@ -1,5 +1,11 @@
 # Changelog
 
+* *2.4.1* (2024-10-14)
+  * Added Python 3.13 support
+  * Added Djade linter to pre-commit
+  * Improved GitHub action triggers
+  * Updated dev dependencies and linters
+
 * *2.4.0* (2024-09-11)
   * Allow custom subject delimiter
 
