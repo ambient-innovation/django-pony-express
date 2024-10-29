@@ -230,6 +230,19 @@ class BaseEmailService:
 
         return msg
 
+    def generate_html_content(self, mail_attributes: dict) -> str:
+        return render_to_string(self.template_name, mail_attributes)
+
+    def generate_text_content(self, mail_attributes: dict, html_content: str) -> str:
+        # Render TXT body part if a template is explicitly set, otherwise convert HTML template to plain text
+        if not self.template_txt_name:
+            h = html2text.HTML2Text()
+            # Set body width to "infinite" to avoid weird line breaks
+            h.body_width = 0
+            return h.handle(html_content)
+        else:
+            return render_to_string(self.template_txt_name, mail_attributes)
+
     def _build_mail_object(self) -> EmailMultiAlternatives:
         """
         This method creates a mail object. It collects the required variables, sets the subject and makes sure that
@@ -245,16 +258,8 @@ class BaseEmailService:
         mail_attributes = self.get_context_data()
 
         # Render HTML body content
-        html_content = render_to_string(self.template_name, mail_attributes)
-
-        # Render TXT body part if a template is explicitly set, otherwise convert HTML template to plain text
-        if not self.template_txt_name:
-            h = html2text.HTML2Text()
-            # Set body width to "infinite" to avoid weird line breaks
-            h.body_width = 0
-            text_content = h.handle(html_content)
-        else:
-            text_content = render_to_string(self.template_txt_name, mail_attributes)
+        html_content = self.generate_html_content(mail_attributes)
+        text_content = self.generate_text_content(mail_attributes, html_content)
 
         # Build mail object
         msg = EmailMultiAlternatives(
