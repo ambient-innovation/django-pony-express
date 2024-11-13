@@ -230,10 +230,10 @@ class BaseEmailService:
 
         return msg
 
-    def generate_html_content(self, mail_attributes: dict) -> str:
+    def _generate_html_content(self, mail_attributes: dict) -> str:
         return render_to_string(self.template_name, mail_attributes)
 
-    def generate_text_content(self, mail_attributes: dict, html_content: str) -> str:
+    def _generate_text_content(self, mail_attributes: dict, html_content: str) -> str:
         # Render TXT body part if a template is explicitly set, otherwise convert HTML template to plain text
         if not self.template_txt_name:
             h = html2text.HTML2Text()
@@ -258,8 +258,8 @@ class BaseEmailService:
         mail_attributes = self.get_context_data()
 
         # Render HTML body content
-        html_content = self.generate_html_content(mail_attributes)
-        text_content = self.generate_text_content(mail_attributes, html_content)
+        html_content = self._generate_html_content(mail_attributes)
+        text_content = self._generate_text_content(mail_attributes, html_content)
 
         # Build mail object
         msg = EmailMultiAlternatives(
