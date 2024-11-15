@@ -407,7 +407,6 @@ class BaseEmailServiceTest(TestCase):
         factory = BaseEmailService()
         self.assertEqual(factory.process(), 0)
 
-
     def test_html_templates_rendering(self):
         my_var = "Lorem ipsum dolor!"
         service = BaseEmailService()
@@ -420,12 +419,11 @@ class BaseEmailServiceTest(TestCase):
         self.assertIn("Lorem ipsum dolor", msg_html)
         self.assertNotIn("I am a different content", msg_html)
 
-
     def test_text_templates_rendering(self):
         my_var = "Lorem ipsum dolor!"
         service = BaseEmailService()
         service.template_txt_name = "testapp/test_email.txt"
-        msg_html = service._generate_text_content({"my_var": my_var}, '')
+        msg_html = service._generate_text_content({"my_var": my_var}, "")
 
         # Assertions
         self.assertIsInstance(msg_html, str)
@@ -434,11 +432,10 @@ class BaseEmailServiceTest(TestCase):
         self.assertIn("I am a different content", msg_html)
         self.assertNotIn("Current date test", msg_html)
 
-
     def test_text_templates_rendering_fallback(self):
         my_var = "Lorem ipsum dolor!"
         service = BaseEmailService()
-        msg_html = service._generate_text_content({"my_var": my_var}, 'Lorem ipsum dolor')
+        msg_html = service._generate_text_content({"my_var": my_var}, "Lorem ipsum dolor")
 
         # Assertions
         self.assertIsInstance(msg_html, str)
