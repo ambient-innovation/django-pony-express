@@ -1,5 +1,8 @@
 # Changelog
 
+* *2.4.3* (2024-11-15)
+  * Move logic to render HTML and text content to dedicated methods
+
 * *2.4.2* (2024-11-15)
   * Internal updates via `ambient-package-update`
 
