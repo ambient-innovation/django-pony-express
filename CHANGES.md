@@ -1,5 +1,8 @@
 # Changelog
 
+* *2.5.0* (2024-12-03)
+  * Added connection param to `BaseEmailService` (Thx to @sk-rama)
+
 * *2.4.3* (2024-11-15)
   * Move logic to render HTML and text content to dedicated methods
 
