@@ -1,5 +1,8 @@
 # Changelog
 
+**2.5.1** (2025-02-15)
+  * Maintenance updates via ambient-package-update
+
 * *2.5.0* (2024-12-03)
   * Added connection param to `BaseEmailService` (Thx to @sk-rama)
 
