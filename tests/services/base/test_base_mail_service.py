@@ -292,7 +292,7 @@ class BaseEmailServiceTest(TestCase):
     @freeze_time("2020-06-26")
     @override_settings(LANGUAGE_CODE="de")
     @mock.patch.object(BaseEmailService, "get_translation", return_value="nl-BE")
-    def test_build_mail_object_deactivates_language_afterwards(self):
+    def test_build_mail_object_deactivates_language_afterwards(self, *args):
         service = BaseEmailService(recipient_email_list="noreply@example.com")
         service.template_name = "testapp/test_email.html"
         msg_obj = service._build_mail_object()
