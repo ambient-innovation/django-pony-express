@@ -2,12 +2,13 @@ name: Unit tests
 
 on:
   push:
-    branches: [ '**' ]
+    branches:
+    - master
   pull_request:
 
 jobs:
   linting:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -25,10 +26,10 @@ jobs:
 
   tests:
     name: Python ${{ matrix.python-version }}, django ${{ matrix.django-version }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', ]
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', ]
         django-version: ['42', '50', '51', ]
 
         exclude:
@@ -59,7 +60,7 @@ jobs:
 
   coverage:
     name: Coverage
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: tests
     steps:
       - uses: actions/checkout@v4

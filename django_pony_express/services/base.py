@@ -4,6 +4,7 @@ from typing import Optional, Union
 import html2text
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.core.mail.backends.base import BaseEmailBackend
 from django.db.models import QuerySet
 from django.template.loader import render_to_string
 from django.utils import translation
@@ -123,12 +124,14 @@ class BaseEmailService:
     cc_email_list = []
     bcc_email_list = []
     attachment_list = []
+    connection = None
 
     def __init__(
         self,
         recipient_email_list: Optional[Union[list, tuple, str]] = None,
         context_data: Optional[dict] = None,
         attachment_list: Optional[list] = None,
+        connection: BaseEmailBackend = None,
         **kwargs,
     ) -> None:
         """
@@ -148,6 +151,7 @@ class BaseEmailService:
         self.recipient_email_list = recipient_email_list if recipient_email_list else []
         self.context_data = context_data if context_data else {}
         self.attachment_list = attachment_list if attachment_list else []
+        self.connection = connection
 
     def _get_logger(self) -> logging.Logger:
         self._logger = logging.getLogger(PONY_LOGGER_NAME) if self._logger is None else self._logger
@@ -230,6 +234,19 @@ class BaseEmailService:
 
         return msg
 
+    def _generate_html_content(self, mail_attributes: dict) -> str:
+        return render_to_string(self.template_name, mail_attributes)
+
+    def _generate_text_content(self, mail_attributes: dict, html_content: str) -> str:
+        # Render TXT body part if a template is explicitly set, otherwise convert HTML template to plain text
+        if not self.template_txt_name:
+            h = html2text.HTML2Text()
+            # Set body width to "infinite" to avoid weird line breaks
+            h.body_width = 0
+            return h.handle(html_content)
+        else:
+            return render_to_string(self.template_txt_name, mail_attributes)
+
     def _build_mail_object(self) -> EmailMultiAlternatives:
         """
         This method creates a mail object. It collects the required variables, sets the subject and makes sure that
@@ -245,16 +262,8 @@ class BaseEmailService:
         mail_attributes = self.get_context_data()
 
         # Render HTML body content
-        html_content = render_to_string(self.template_name, mail_attributes)
-
-        # Render TXT body part if a template is explicitly set, otherwise convert HTML template to plain text
-        if not self.template_txt_name:
-            h = html2text.HTML2Text()
-            # Set body width to "infinite" to avoid weird line breaks
-            h.body_width = 0
-            text_content = h.handle(html_content)
-        else:
-            text_content = render_to_string(self.template_txt_name, mail_attributes)
+        html_content = self._generate_html_content(mail_attributes)
+        text_content = self._generate_text_content(mail_attributes, html_content)
 
         # Build mail object
         msg = EmailMultiAlternatives(
@@ -265,6 +274,7 @@ class BaseEmailService:
             bcc=self.get_bcc_emails(),
             reply_to=self.get_reply_to_emails(),
             to=self.recipient_email_list,
+            connection=self.connection,
         )
         msg.attach_alternative(html_content, "text/html")
 

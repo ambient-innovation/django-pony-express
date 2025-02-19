@@ -3,6 +3,7 @@ from os.path import basename
 from unittest import mock
 
 from django.conf import settings
+from django.core import mail
 from django.core.mail import EmailMultiAlternatives
 from django.test import TestCase, override_settings
 from django.utils import translation
@@ -26,6 +27,22 @@ class BaseEmailServiceTest(TestCase):
         service = BaseEmailService()
         self.assertEqual(service.recipient_email_list, [])
         self.assertEqual(service.context_data, {})
+
+    def test_init_connection_regular(self):
+        connection = mail.get_connection()
+
+        service = BaseEmailService(recipient_email_list=["dummy@example.com"], connection=connection)
+
+        service.subject = "My subject"
+        service.template_name = "testapp/test_email.html"
+
+        result = service.process()
+        self.assertIs(result, 1)
+
+        # Assert email was "sent"
+        self.assertGreater(len(mail.outbox), 0)
+        self.assertEqual(mail.outbox[0].subject, "My subject")
+        self.assertEqual(mail.outbox[0].to, ["dummy@example.com"])
 
     def test_get_logger_logger_not_set(self):
         service = BaseEmailService()
@@ -422,3 +439,40 @@ class BaseEmailServiceTest(TestCase):
     def test_process_is_valid_invalid(self, *args):
         factory = BaseEmailService()
         self.assertEqual(factory.process(), 0)
+
+    def test_html_templates_rendering(self):
+        my_var = "Lorem ipsum dolor!"
+        service = BaseEmailService()
+        service.template_name = "testapp/test_email.html"
+        msg_html = service._generate_html_content({"my_var": my_var})
+
+        # Assertions
+        self.assertIsInstance(msg_html, str)
+
+        self.assertIn("Lorem ipsum dolor", msg_html)
+        self.assertNotIn("I am a different content", msg_html)
+
+    def test_text_templates_rendering(self):
+        my_var = "Lorem ipsum dolor!"
+        service = BaseEmailService()
+        service.template_txt_name = "testapp/test_email.txt"
+        msg_html = service._generate_text_content({"my_var": my_var}, "")
+
+        # Assertions
+        self.assertIsInstance(msg_html, str)
+
+        self.assertIn("Lorem ipsum dolor", msg_html)
+        self.assertIn("I am a different content", msg_html)
+        self.assertNotIn("Current date test", msg_html)
+
+    def test_text_templates_rendering_fallback(self):
+        my_var = "Lorem ipsum dolor!"
+        service = BaseEmailService()
+        msg_html = service._generate_text_content({"my_var": my_var}, "Lorem ipsum dolor")
+
+        # Assertions
+        self.assertIsInstance(msg_html, str)
+
+        self.assertIn("Lorem ipsum dolor", msg_html)
+        self.assertNotIn("I am a different content", msg_html)
+        self.assertNotIn("Current date test", msg_html)

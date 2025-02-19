@@ -1,7 +1,25 @@
 # Changelog
 
-* *2.3.4* (2025-02-19)
+* *2.5.1* (2025-02-19)
   * Fixed a bug, where translations were not deactivated after sending an email
+
+* *2.5.0* (2024-12-03)
+  * Added connection param to `BaseEmailService` (Thx to @sk-rama)
+
+* *2.4.3* (2024-11-15)
+  * Move logic to render HTML and text content to dedicated methods
+
+* *2.4.2* (2024-11-15)
+  * Internal updates via `ambient-package-update`
+
+* *2.4.1* (2024-10-14)
+  * Added Python 3.13 support
+  * Added Djade linter to pre-commit
+  * Improved GitHub action triggers
+  * Updated dev dependencies and linters
+
+* *2.4.0* (2024-09-11)
+  * Allow custom subject delimiter
 
 * *2.3.3* (2024-09-11)
   * Fixed coverage setup due to GitHub changes
