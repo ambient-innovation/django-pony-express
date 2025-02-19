@@ -1,5 +1,8 @@
 # Changelog
 
+* *2.3.4* (2025-02-19)
+  * Fixed a bug, where translations were not deactivated after sending an email
+
 * *2.3.3* (2024-09-11)
   * Fixed coverage setup due to GitHub changes
 
