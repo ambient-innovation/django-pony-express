@@ -271,6 +271,9 @@ class BaseEmailService:
         # Add attachments (if available)
         msg = self._add_attachments(msg)
 
+        # Deactivate translation
+        translation.deactivate()
+
         # Return mail object
         return msg
 
