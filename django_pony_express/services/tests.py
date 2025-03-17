@@ -197,7 +197,7 @@ class EmailTestServiceQuerySet(TestCase):
         """
         if self._match_list is None:
             raise RuntimeError(
-                "Counting of matches called without previous query. " "Please call filter() or all() first."
+                "Counting of matches called without previous query. Please call filter() or all() first."
             )
 
     def one(self):
