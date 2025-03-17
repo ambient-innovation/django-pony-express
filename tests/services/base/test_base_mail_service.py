@@ -306,6 +306,14 @@ class BaseEmailServiceTest(TestCase):
         self.assertIn("vrijdag", msg_obj.body)
         self.assertIn("vrijdag", msg_obj.alternatives[0][0])
 
+    def test_check_email_structure_validity_valid_email(self):
+        service = BaseEmailService()
+        self.assertIs(service._check_email_structure_validity(email="albertus.magnus@example.com"), True)
+
+    def test_check_email_structure_validity_invalid_email(self):
+        service = BaseEmailService()
+        self.assertIs(service._check_email_structure_validity(email="no-at-example.com"), False)
+
     def test_is_valid_positive_case(self):
         email = "albertus.magnus@example.com"
         subject = "Test email"
@@ -340,6 +348,17 @@ class BaseEmailServiceTest(TestCase):
         service = BaseEmailService()
         service.is_valid(raise_exception=False)
         self.assertEqual(len(service.errors), 3)
+
+    def test_is_valid_invalid_email_address(self):
+        service = BaseEmailService()
+        service.subject = "My subject"
+        service.template_name = "testapp/test_email.html"
+        service.recipient_email_list = ["test user@example.com"]
+
+        service.is_valid(raise_exception=False)
+
+        self.assertEqual(len(service.errors), 1)
+        self.assertIn('Email service received ill-formatted email address "test user@example.com"', service.errors)
 
     def test_has_errors_positive_case(self):
         service = BaseEmailService()
