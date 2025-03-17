@@ -53,6 +53,7 @@ dev = [
    'flit~=3.9',
    'keyring~=25.4',
    'ambient-package-update',
+   'freezegun~=1.5',
 ]
 
 [tool.flit.module]
