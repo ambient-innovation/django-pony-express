@@ -6,7 +6,7 @@
 * *2.6.0* (2025-03-17)
   * Added check for email structure validity
 
-**2.5.1* (2025-02-15)
+**2.5.1** (2025-02-15)
   * Maintenance updates via ambient-package-update
 
 * *2.5.0* (2024-12-03)
