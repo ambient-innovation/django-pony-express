@@ -35,6 +35,7 @@ METADATA = PackageMetadata(
     optional_dependencies={
         "dev": [
             *DEV_DEPENDENCIES,
+            "freezegun~=1.5",
         ],
     },
     ruff_ignore_list=[

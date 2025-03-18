@@ -1,7 +1,13 @@
 # Changelog
 
-* *2.5.1* (2025-02-19)
+* *2.6.1* (2025-03-18)
   * Fixed a bug, where translations were not deactivated after sending an email
+
+* *2.6.0* (2025-03-17)
+  * Added check for email structure validity
+
+* *2.5.1* (2025-02-15)
+  * Maintenance updates via ambient-package-update
 
 * *2.5.0* (2024-12-03)
   * Added connection param to `BaseEmailService` (Thx to @sk-rama)

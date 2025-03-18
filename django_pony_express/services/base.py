@@ -1,4 +1,5 @@
 import logging
+import re
 from typing import Optional, Union
 
 import html2text
@@ -113,6 +114,7 @@ class BaseEmailService:
     SUBJECT_DELIMITER = " - "
     FROM_EMAIL = None
     REPLY_TO_ADDRESS = []
+    EMAIL_STRUCTURE_PATTERN = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
 
     _errors = []
     _logger: logging.Logger = None
@@ -287,6 +289,12 @@ class BaseEmailService:
         # Return mail object
         return msg
 
+    def _check_email_structure_validity(self, email: str) -> bool:
+        """
+        Checks the structure of the given "email" for compliance.
+        """
+        return bool(self.EMAIL_STRUCTURE_PATTERN.match(email))
+
     def is_valid(self, raise_exception: bool = True) -> bool:
         """
         This function ensures that all required variables for the email object are set. Can be overridden and extended
@@ -298,6 +306,11 @@ class BaseEmailService:
             self._errors.append(_("Email service requires a template."))
         if not len(self.recipient_email_list):
             self._errors.append(_("Email service requires a target mail address."))
+        for email in self.recipient_email_list:
+            if not self._check_email_structure_validity(email=email):
+                self._errors.append(
+                    _('Email service received ill-formatted email address "{email}"').format(email=email)
+                )
 
         if self._errors and raise_exception:
             raise EmailServiceConfigError(self._errors)
