@@ -1,5 +1,8 @@
 # Changelog
 
+**2.6.2** (2025-04-03)
+  * Maintenance updates via ambient-package-update
+
 * *2.6.1* (2025-03-18)
   * Fixed a bug, where translations were not deactivated after sending an email
 
