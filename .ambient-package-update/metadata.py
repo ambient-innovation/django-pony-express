@@ -47,5 +47,7 @@ METADATA = PackageMetadata(
             key="RUF012", comment="Mutable class attributes should be annotated with `typing.ClassVar`"
         ),
         RuffIgnoredInspection(key="TRY003", comment="Avoid specifying long messages outside the exception class"),
+        RuffIgnoredInspection(key="TD002", comment="Missing author in to-do"),
+        RuffIgnoredInspection(key="TD003", comment="TD003 Missing issue link for this to-do"),
     ],
 )

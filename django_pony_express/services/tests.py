@@ -126,6 +126,8 @@ class EmailTestServiceMail(mail.EmailMultiAlternatives):
         :param msg: str
         """
 
+        # TODO: use Django 5.2 `body_contains()` once we drop older versions
+        #  (https://docs.djangoproject.com/en/5.2/topics/email/#django.core.mail.EmailMultiAlternatives.body_contains)
         # Assert string is contained in TXT part
         self._testcase.assertIn(search_str, self._get_txt_content(), msg=msg)
         # Assert string is contained in HTML part (if HTML part is set)

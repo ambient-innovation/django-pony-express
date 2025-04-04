@@ -102,6 +102,8 @@ lint.ignore = [
     "B905", # Can be enabled when Python <=3.9 support is dropped
     "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
     "TRY003", # Avoid specifying long messages outside the exception class
+    "TD002", # Missing author in to-do
+    "TD003", # TD003 Missing issue link for this to-do
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
