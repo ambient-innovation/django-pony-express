@@ -1,5 +1,8 @@
 # Changelog
 
+**2.6.3** (2025-05-09)
+  * Replaced docstring type hints with proper Pythonic ones in test suit
+
 **2.6.2** (2025-04-03)
   * Maintenance updates via ambient-package-update
 
