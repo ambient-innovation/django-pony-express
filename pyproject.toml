@@ -16,7 +16,7 @@ classifiers = [
     "Framework :: Django :: 5.1",
     "Framework :: Django :: 5.2",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
@@ -32,7 +32,7 @@ dynamic = ["version", "description"]
 license = {"file" = "LICENSE.md"}
 dependencies = [
     'Django>=4.2',
-    'html2text>=2020.1.16',
+    'beautifulsoup4>=4.13',
 ]
 
 
@@ -93,7 +93,8 @@ lint.select = [
     "ANN401",  # Checks that function arguments are annotated with a more specific type than Any
     "TRY",     # Clean try/except
     "ERA",     # Commented out code
-    "INP"      # Ban PEP-420 implicit namespace packages
+    "INP",     # Ban PEP-420 implicit namespace packages
+    "C90",     # McCabe code complexity
 ]
 lint.ignore = [
     "N999", # Project name contains underscore, not fixable
@@ -133,7 +134,8 @@ lint.fixable = [
     "ANN401",  # Checks that function arguments are annotated with a more specific type than Any
     "TRY",     # Clean try/except
     "ERA",     # Commented out code
-    "INP"      # Ban PEP-420 implicit namespace packages
+    "INP",     # Ban PEP-420 implicit namespace packages
+    "C90",     # McCabe code complexity
 ]
 lint.unfixable = []
 

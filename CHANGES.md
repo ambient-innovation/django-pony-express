@@ -1,5 +1,11 @@
 # Changelog
 
+**2.7.0** (2025-05-21)
+  * Replaced `html2text` with `beautifulsoup4` to make package available under MIT license
+  * Switched back to MIT license
+  * Added `CONTRIBUTING.md` file and removed contributing guidelines from readme
+  * Maintenance updates via ambient-package-update
+
 **2.6.3** (2025-05-09)
   * Replaced docstring type hints with proper Pythonic ones in test suit
 

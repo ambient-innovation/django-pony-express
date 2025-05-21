@@ -1,7 +1,7 @@
 from ambient_package_update.metadata.author import PackageAuthor
 from ambient_package_update.metadata.constants import (
     DEV_DEPENDENCIES,
-    LICENSE_GPL,
+    LICENSE_MIT,
     SUPPORTED_DJANGO_VERSIONS,
     SUPPORTED_PYTHON_VERSIONS,
 )
@@ -21,14 +21,14 @@ METADATA = PackageMetadata(
     ],
     maintainer=PackageMaintainer(name="Ambient Digital", url="https://ambient.digital/", email="hello@ambient.digital"),
     licenser="Ambient Innovation: GmbH",
-    license=LICENSE_GPL,
+    license=LICENSE_MIT,
     license_year=2023,
     development_status="5 - Production/Stable",
     has_migrations=False,
     readme_content=ReadmeContent(uses_internationalisation=True),
     dependencies=[
         f"Django>={SUPPORTED_DJANGO_VERSIONS[0]}",
-        "html2text>=2020.1.16",
+        "beautifulsoup4>=4.13",
     ],
     supported_django_versions=SUPPORTED_DJANGO_VERSIONS,
     supported_python_versions=SUPPORTED_PYTHON_VERSIONS,

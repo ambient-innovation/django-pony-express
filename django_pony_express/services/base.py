@@ -2,7 +2,7 @@ import logging
 import re
 from typing import Optional, Union
 
-import html2text
+from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail.backends.base import BaseEmailBackend
@@ -242,10 +242,8 @@ class BaseEmailService:
     def _generate_text_content(self, mail_attributes: dict, html_content: str) -> str:
         # Render TXT body part if a template is explicitly set, otherwise convert HTML template to plain text
         if not self.template_txt_name:
-            h = html2text.HTML2Text()
-            # Set body width to "infinite" to avoid weird line breaks
-            h.body_width = 0
-            return h.handle(html_content)
+            soup = BeautifulSoup(html_content)
+            return soup.get_text(strip=True)
         else:
             return render_to_string(self.template_txt_name, mail_attributes)
 
