@@ -1,5 +1,8 @@
 # Changelog
 
+**2.7.1** (2025-05-29)
+  * Fixed a bug where html-converted plain text would miss links
+
 **2.7.0** (2025-05-21)
   * Replaced `html2text` with `beautifulsoup4` to make package available under MIT license
   * Switched back to MIT license
@@ -13,7 +16,7 @@
   * Maintenance updates via ambient-package-update
 
 * *2.6.1* (2025-03-18)
-  * Fixed a bug, where translations were not deactivated after sending an email
+  * Fixed a bug where translations were not deactivated after sending an email
 
 * *2.6.0* (2025-03-17)
   * Added check for email structure validity

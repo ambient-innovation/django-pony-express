@@ -242,8 +242,15 @@ class BaseEmailService:
     def _generate_text_content(self, mail_attributes: dict, html_content: str) -> str:
         # Render TXT body part if a template is explicitly set, otherwise convert HTML template to plain text
         if not self.template_txt_name:
-            soup = BeautifulSoup(html_content)
-            return soup.get_text(strip=True)
+            soup = BeautifulSoup(html_content, "html.parser")
+
+            # Convert links to this pattern: "[LINK NAME] ([LINK URL])"
+            for a in soup.find_all("a"):
+                text = a.get_text()
+                href = a.get("href", "")
+                a.replace_with(f"{text} ({href})")
+
+            return soup.get_text(separator="\n", strip=True)
         else:
             return render_to_string(self.template_txt_name, mail_attributes)
 

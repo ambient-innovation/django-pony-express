@@ -475,23 +475,29 @@ class BaseEmailServiceTest(TestCase):
         my_var = "Lorem ipsum dolor!"
         service = BaseEmailService()
         service.template_txt_name = "testapp/test_email.txt"
-        msg_html = service._generate_text_content({"my_var": my_var}, "")
+        msg_text = service._generate_text_content({"my_var": my_var}, "")
 
         # Assertions
-        self.assertIsInstance(msg_html, str)
+        self.assertIsInstance(msg_text, str)
 
-        self.assertIn("Lorem ipsum dolor", msg_html)
-        self.assertIn("I am a different content", msg_html)
-        self.assertNotIn("Current date test", msg_html)
+        self.assertIn("Lorem ipsum dolor", msg_text)
+        self.assertIn("I am a different content", msg_text)
+        self.assertNotIn("Current date test", msg_text)
 
-    def test_text_templates_rendering_fallback(self):
+    def test_generate_text_content_html_conversion(self):
         my_var = "Lorem ipsum dolor!"
         service = BaseEmailService()
-        msg_html = service._generate_text_content({"my_var": my_var}, "Lorem ipsum dolor")
+        service.template_name = "testapp/test_email.html"
+
+        msg_html = service._generate_html_content({"my_var": my_var, "link_url": "https//example.com?pony=horse"})
+        msg_txt = service._generate_text_content(mail_attributes={}, html_content=msg_html)
 
         # Assertions
         self.assertIsInstance(msg_html, str)
 
-        self.assertIn("Lorem ipsum dolor", msg_html)
-        self.assertNotIn("I am a different content", msg_html)
-        self.assertNotIn("Current date test", msg_html)
+        self.assertIn("Lorem ipsum dolor", msg_txt)
+        # Check linebreaks are not removed
+        self.assertIn("29. May 2025\n", msg_txt)
+
+        # Check links are converted correctly
+        self.assertIn("I am a link (https//example.com?pony=horse)", msg_txt)
