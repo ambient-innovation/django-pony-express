@@ -1,13 +1,14 @@
+import datetime
 import logging
 from os.path import basename
 from unittest import mock
 
+import time_machine
 from django.conf import settings
 from django.core import mail
 from django.core.mail import EmailMultiAlternatives
 from django.test import TestCase, override_settings
 from django.utils import translation
-from freezegun import freeze_time
 
 from django_pony_express.errors import EmailServiceAttachmentError, EmailServiceConfigError
 from django_pony_express.services.base import BaseEmailService
@@ -208,7 +209,7 @@ class BaseEmailServiceTest(TestCase):
         with self.assertRaises(EmailServiceAttachmentError):
             service._add_attachments(msg_obj)
 
-    @freeze_time("2020-06-26")
+    @time_machine.travel(datetime.date(2020, 6, 26))
     def test_build_mail_object_regular(self):
         from_email = "noreply@example.com"
         reply_to_email = "willreply@example.com"
@@ -293,7 +294,7 @@ class BaseEmailServiceTest(TestCase):
 
         self.assertIn(my_var, msg_obj.body)
 
-    @freeze_time("2020-06-26")
+    @time_machine.travel(datetime.date(2020, 6, 26))
     @override_settings(LANGUAGE_CODE="nl-BE")
     def test_build_mail_object_translation_works(self):
         service = BaseEmailService(recipient_email_list="noreply@example.com")
@@ -314,7 +315,7 @@ class BaseEmailServiceTest(TestCase):
         service = BaseEmailService()
         self.assertIs(service._check_email_structure_validity(email="no-at-example.com"), False)
 
-    @freeze_time("2020-06-26")
+    @time_machine.travel(datetime.date(2020, 6, 26))
     @override_settings(LANGUAGE_CODE="de")
     @mock.patch.object(BaseEmailService, "get_translation", return_value="nl-BE")
     def test_build_mail_object_deactivates_language_afterwards(self, *args):
@@ -484,6 +485,7 @@ class BaseEmailServiceTest(TestCase):
         self.assertIn("I am a different content", msg_text)
         self.assertNotIn("Current date test", msg_text)
 
+    @time_machine.travel(datetime.date(2025, 6, 26))
     def test_generate_text_content_html_conversion(self):
         my_var = "Lorem ipsum dolor!"
         service = BaseEmailService()
@@ -497,7 +499,7 @@ class BaseEmailServiceTest(TestCase):
 
         self.assertIn("Lorem ipsum dolor", msg_txt)
         # Check linebreaks are not removed
-        self.assertIn("29. May 2025\n", msg_txt)
+        self.assertIn("26. June 2025\n", msg_txt)
 
         # Check links are converted correctly
         self.assertIn("I am a link (https//example.com?pony=horse)", msg_txt)
