@@ -1,5 +1,9 @@
 # Changelog
 
+**2.7.2** (2025-05-30)
+  * Replaced freezegun with time_machine for tests
+  * Maintenance updates via ambient-package-update
+
 **2.7.1** (2025-05-29)
   * Fixed a bug where html-converted plain text would miss links
 
