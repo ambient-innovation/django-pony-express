@@ -75,4 +75,3 @@ How to compile translation files:
 * Navigate to `django-pony-express`
 * `python manage.py compilemessages`
 * Have a look at the new/changed files within `django_pony_express/locale`
-
