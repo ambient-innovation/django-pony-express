@@ -38,7 +38,7 @@ class BaseEmailServiceTest(TestCase):
         service.template_name = "testapp/test_email.html"
 
         result = service.process()
-        self.assertIs(result, 1)
+        self.assertIs(result, True)
 
         # Assert email was "sent"
         self.assertGreater(len(mail.outbox), 0)
@@ -398,7 +398,7 @@ class BaseEmailServiceTest(TestCase):
         )
 
         mock_logger.info.assert_called_with('Email "The Pony Express" successfully sent.')
-        self.assertEqual(result, 1)
+        self.assertEqual(result, True)
 
     @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
     @mock.patch("django_pony_express.services.base.PONY_LOG_RECIPIENTS", True)
@@ -409,7 +409,7 @@ class BaseEmailServiceTest(TestCase):
         )
 
         mock_logger.info.assert_called_with('Email "The Pony Express" successfully sent to thomas.aquin@example.com.')
-        self.assertEqual(result, 1)
+        self.assertEqual(result, True)
 
     @mock.patch.object(EmailMultiAlternatives, "send", side_effect=Exception("Broken pony"))
     @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
@@ -438,6 +438,26 @@ class BaseEmailServiceTest(TestCase):
             "Broken pony",
         )
         self.assertFalse(result)
+
+    @mock.patch.object(EmailMultiAlternatives, "send", return_value=1)
+    def test_send_and_log_email_returns_true_when_msg_send_returns_one(self, mock_send):
+        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
+        result = service._send_and_log_email(
+            msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
+        )
+
+        mock_send.assert_called_once()
+        self.assertEqual(result, True)
+
+    @mock.patch.object(EmailMultiAlternatives, "send", return_value=99)
+    def test_send_and_log_email_returns_false_when_msg_send_returns_any_other_number_than_one(self, mock_send):
+        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
+        result = service._send_and_log_email(
+            msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
+        )
+
+        mock_send.assert_called_once()
+        self.assertEqual(result, False)
 
     def test_process_regular(self):
         email = "albertus.magnus@example.com"

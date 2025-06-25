@@ -343,7 +343,9 @@ class BaseEmailService:
         result = False
         recipients_as_string = " ".join(self.recipient_email_list)
         try:
-            result = msg.send()
+            # msg.send() returns an int: 0 if no recipients exist, 1 if the message sending was successful
+            # Since we want to return a boolean, we check for "== 1" here
+            result = msg.send() == 1
             if PONY_LOG_RECIPIENTS:
                 self._logger.info(_('Email "%s" successfully sent to %s.') % (msg.subject, recipients_as_string))
             else:

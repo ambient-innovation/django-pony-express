@@ -1,3 +1,3 @@
 """Class-based emails including a test suite for Django"""
 
-__version__ = "2.7.2"
+__version__ = "2.7.3"
