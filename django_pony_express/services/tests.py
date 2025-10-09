@@ -1,6 +1,5 @@
 import re
 import warnings
-from typing import Optional, Union
 
 from django.core import mail
 from django.core.mail import EmailMultiAlternatives
@@ -32,10 +31,10 @@ class EmailTestService:
 
     def filter(
         self,
-        to: Optional[str] = None,
-        cc: Optional[str] = None,
-        bcc: Optional[str] = None,
-        subject: Union[str, re.Pattern, None] = None,
+        to: str | None = None,
+        cc: str | None = None,
+        bcc: str | None = None,
+        subject: str | re.Pattern | None = None,
     ) -> "EmailTestServiceQuerySet":
         """
         Searches in the _outbox for emails matching either to and/or subject.
@@ -90,7 +89,7 @@ class EmailTestServiceMail(mail.EmailMultiAlternatives):
 
     _testcase = TestCase()  # Hacky way to get access to TestCase.assert* methods without deriving from TestCase
 
-    def _get_html_content(self) -> Optional[str]:
+    def _get_html_content(self) -> str | None:
         """
         Ensure we just have found one element and then return the HTML part of the email
         """
@@ -106,7 +105,7 @@ class EmailTestServiceMail(mail.EmailMultiAlternatives):
         # Search for string
         return self.body
 
-    def assert_subject(self, subject: str, msg: Optional[str] = None) -> None:
+    def assert_subject(self, subject: str, msg: str | None = None) -> None:
         """
         Searches in a given email inside the HTML AND TXT part for a given string
         """
@@ -114,7 +113,7 @@ class EmailTestServiceMail(mail.EmailMultiAlternatives):
         # Assert the expected subject is equal to the generated one
         self._testcase.assertEqual(subject, self.subject, msg=msg)
 
-    def assert_body_contains(self, search_str: str, msg: Optional[str] = None) -> None:
+    def assert_body_contains(self, search_str: str, msg: str | None = None) -> None:
         """
         Searches in a given email inside the HTML AND TXT part for a given string
         """
@@ -128,7 +127,7 @@ class EmailTestServiceMail(mail.EmailMultiAlternatives):
         if html_content is not None:
             self._testcase.assertIn(search_str, html_content, msg=msg)
 
-    def assert_body_contains_not(self, search_str: str, msg: Optional[str] = None) -> None:
+    def assert_body_contains_not(self, search_str: str, msg: str | None = None) -> None:
         """
         Searches in a given email inside the HTML AND TXT part for a given string
         """
@@ -149,7 +148,7 @@ class EmailTestServiceMail(mail.EmailMultiAlternatives):
 class EmailTestServiceQuerySet(TestCase):
     _match_list = None
 
-    def __init__(self, matching_list: Optional[list] = None) -> None:
+    def __init__(self, matching_list: list | None = None) -> None:
         super().__init__()
         self._match_list = matching_list
         for email in self._match_list or []:
@@ -158,7 +157,7 @@ class EmailTestServiceQuerySet(TestCase):
             if isinstance(email, EmailMultiAlternatives):
                 email.__class__ = EmailTestServiceMail
 
-    def _get_html_content(self) -> Optional[str]:
+    def _get_html_content(self) -> str | None:
         """
         Ensure we just have found one element and then return the HTML part of the email
         """
@@ -226,19 +225,19 @@ class EmailTestServiceQuerySet(TestCase):
         self._ensure_matching_list_was_populated()
         return self[-1] if self.count() > 0 else False
 
-    def assert_one(self, msg: Optional[str] = None):
+    def assert_one(self, msg: str | None = None):
         """
         Makes an assertion to make sure the queried element exists exactly once
         """
         self.assertEqual(self.one(), True, msg=msg)
 
-    def assert_quantity(self, target_quantity: str, msg: Optional[str] = None) -> None:
+    def assert_quantity(self, target_quantity: str, msg: str | None = None) -> None:
         """
         Makes an assertion to make sure that the number of queried mails is equal to `target_quantity`
         """
         self.assertEqual(self.count(), target_quantity, msg=msg)
 
-    def assert_subject(self, subject: str, msg: Optional[str] = None) -> None:
+    def assert_subject(self, subject: str, msg: str | None = None) -> None:
         """
         Searches in a given email inside the HTML AND TXT part for a given string
         """
@@ -250,7 +249,7 @@ class EmailTestServiceQuerySet(TestCase):
         self._validate_lookup_cache_contains_one_element()
         self[0].assert_subject(subject, msg)
 
-    def assert_body_contains(self, search_str: str, msg: Optional[str] = None) -> None:
+    def assert_body_contains(self, search_str: str, msg: str | None = None) -> None:
         """
         Searches in a given email inside the HTML AND TXT part for a given string
         """
@@ -263,7 +262,7 @@ class EmailTestServiceQuerySet(TestCase):
         self._validate_lookup_cache_contains_one_element()
         self[0].assert_body_contains(search_str, msg)
 
-    def assert_body_contains_not(self, search_str: str, msg: Optional[str] = None) -> None:
+    def assert_body_contains_not(self, search_str: str, msg: str | None = None) -> None:
         """
         Searches in a given email inside the HTML AND TXT part for a given string
         """

@@ -1,6 +1,5 @@
 import logging
 import re
-from typing import Optional, Union
 
 from bs4 import BeautifulSoup
 from django.conf import settings
@@ -25,7 +24,7 @@ class BaseEmailServiceFactory:
     service_class = None
     recipient_email_list = []
 
-    def __init__(self, recipient_email_list: Union[list, tuple, QuerySet] = None, **kwargs) -> None:
+    def __init__(self, recipient_email_list: list | tuple | QuerySet = None, **kwargs) -> None:
         """
         Initialisation takes optionally a list of recipients. Doesn't have to be a list of strings because
         fetching the actual email from a complex data structure can be done in the method `get_email_from_recipient()`
@@ -130,9 +129,9 @@ class BaseEmailService:
 
     def __init__(
         self,
-        recipient_email_list: Optional[Union[list, tuple, str]] = None,
-        context_data: Optional[dict] = None,
-        attachment_list: Optional[list] = None,
+        recipient_email_list: list | tuple | str | None = None,
+        context_data: dict | None = None,
+        attachment_list: list | None = None,
         connection: BaseEmailBackend = None,
         **kwargs,
     ) -> None:
@@ -199,7 +198,7 @@ class BaseEmailService:
         """
         return [self.REPLY_TO_ADDRESS] if isinstance(self.REPLY_TO_ADDRESS, str) else self.REPLY_TO_ADDRESS
 
-    def get_translation(self) -> Union[str, None]:
+    def get_translation(self) -> str | None:
         """
         Tries to fetch the current translation from the django settings.
         """
