@@ -25,6 +25,7 @@ METADATA = PackageMetadata(
     license_year=2023,
     development_status="5 - Production/Stable",
     has_migrations=False,
+    claim="Class-based emails including a test suite for Django",
     readme_content=ReadmeContent(uses_internationalisation=True),
     dependencies=[
         f"Django>={SUPPORTED_DJANGO_VERSIONS[0]}",
