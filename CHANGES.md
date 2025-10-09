@@ -1,5 +1,8 @@
 # Changelog
 
+**2.7.4** (2025-10-09)
+  * Maintenance updates via ambient-package-update
+
 **2.7.3** (2025-06-24)
   * Convert `msg.send()` result to boolean in `._send_and_log_email()`
 

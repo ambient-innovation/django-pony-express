@@ -3,9 +3,8 @@
 ## Setup package for development
 
 - Create a Python virtualenv and activate it
-- Install "pip-tools" with `pip install -U pip-tools`
-- Compile the requirements with `pip-compile --extra dev, -o requirements.txt pyproject.toml --resolver=backtracking`
-- Sync the dependencies with your virtualenv with `pip-sync`
+- Install "uv" with `pip install -U uv`
+- Sync the requirements with `uv sync --frozen --group dev`
 
 ## Add functionality
 
@@ -57,7 +56,6 @@ Example: run all hooks of pre-push stage
 
 - To build the documentation, run: `sphinx-build docs/ docs/_build/html/`.
 - Open `docs/_build/html/index.html` to see the documentation.
-
 
 ### Translation files
 

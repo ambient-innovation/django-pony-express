@@ -11,11 +11,9 @@ suite.
 Similar to class-based view in Django core, this package provides a neat, DRY and testable (!) way to handle your
 emails in Django.
 
-* [PyPI](https://pypi.org/project/django-pony-express/)
-* [GitHub](https://github.com/ambient-innovation/django-pony-express)
-* [Full documentation](https://django-pony-express.readthedocs.io/en/latest/index.html)
-* Creator & Maintainer: [Ambient Digital](https://ambient.digital/)
+[PyPI](https://pypi.org/project/django-pony-express/) | [GitHub](https://github.com/ambient-innovation/django-pony-express) | [Full documentation](https://django-pony-express.readthedocs.io/en/latest/index.html)
 
+Creator & Maintainer: [Ambient Digital](https://ambient.digital/)
 
 ## Features
 
@@ -43,20 +41,18 @@ Ingenious, right?
 
   `pip install django-pony-express`
 
-  or via pipenv:
+  or via uv:
 
-  `pipenv install django-pony-express`
+  `uv add django-pony-express`
 
 - Add module to `INSTALLED_APPS` within the main django `settings.py`:
 
-    ```python
-    INSTALLED_APPS = (
-        # ...
-        "django_pony_express",
-    )
-    ```
-
-
+```python
+INSTALLED_APPS = (
+    # ...
+    "django_pony_express",
+)
+```
 
 ### Publish to ReadTheDocs.io
 
@@ -64,27 +60,43 @@ Ingenious, right?
 - Trigger new build at ReadTheDocs.io (follow instructions in admin panel at RTD) if the GitHub webhook is not yet set
   up.
 
-### Publish to PyPi
+### Preparation and building
+
+This package uses [uv](https://github.com/astral-sh/uv) for dependency management and building.
 
 - Update documentation about new/changed functionality
 
-- Update the `Changelog`
+- Update the `CHANGES.md`
 
 - Increment version in main `__init__.py`
 
-- Create pull request / merge to master
+- Create pull request / merge to "master"
 
-- This project uses the flit package to publish to PyPI. Thus, publishing should be as easy as running:
-  ```
-  flit publish
+- This project uses uv to publish to PyPI. This will create distribution files in the `dist/` directory.
+
+  ```bash
+  uv build
   ```
 
-  To publish to TestPyPI use the following to ensure that you have set up your .pypirc as
-  shown [here](https://flit.readthedocs.io/en/latest/upload.html#using-pypirc) and use the following command:
+### Publishing to PyPI
 
-  ```
-  flit publish --repository testpypi
-  ```
+To publish to the production PyPI:
+
+```bash
+uv publish
+```
+
+To publish to TestPyPI first (recommended for testing):
+
+```bash
+uv publish --publish-url https://test.pypi.org/legacy/
+```
+
+You can then test the installation from TestPyPI:
+
+```bash
+uv pip install --index-url https://test.pypi.org/simple/ ambient-package-update
+```
 
 ### Maintenance
 
