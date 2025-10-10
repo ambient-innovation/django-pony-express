@@ -1,6 +1,6 @@
 [build-system]
-requires = ["flit_core>=3.4"]
-build-backend = "flit_core.buildapi"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "django-pony-express"
@@ -21,43 +21,36 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Utilities",
 ]
-dynamic = ["version", "description"]
+dynamic = ["version"]
+description = "Class-based emails including a test suite for Django"
 license = {"file" = "LICENSE.md"}
+requires-python = ">=3.10"
 dependencies = [
     'Django>=4.2',
     'beautifulsoup4>=4.13',
 ]
 
-
-
-
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-   'typer~=0.12',
-   'pytest-django~=4.9',
-   'pytest-mock~=3.14',
-   'coverage~=7.6',
-   'pre-commit~=4.2',
-   'ruff~=0.11',
-   'sphinx~=7.1',
-   'sphinx-rtd-theme~=2.0',
-   'm2r2==0.3.3.post2',
-   'mistune<2.0.0',
-   'flit~=3.12',
-   'keyring~=25.6',
+   'typer~=0.19',
+   'pytest-cov~=7.0',
+   'pytest-django~=4.11',
+   'pytest-mock~=3.15',
+   'pre-commit~=4.3',
+   'sphinx~=7.4',
+   'sphinx-rtd-theme~=3.0',
+   'm2r2~=0.3',
+   'uv~=0.9',
    'ambient-package-update',
    'time_machine~=2.16',
 ]
-
-[tool.flit.module]
-name = "django_pony_express"
 
 [project.urls]
 'Homepage' = 'https://github.com/ambient-innovation/django-pony-express/'
@@ -95,6 +88,7 @@ lint.select = [
     "ERA",     # Commented out code
     "INP",     # Ban PEP-420 implicit namespace packages
     "C90",     # McCabe code complexity
+    "FURB",    # Refurbish Python code
 ]
 lint.ignore = [
     "N999", # Project name contains underscore, not fixable
@@ -136,6 +130,7 @@ lint.fixable = [
     "ERA",     # Commented out code
     "INP",     # Ban PEP-420 implicit namespace packages
     "C90",     # McCabe code complexity
+    "FURB",    # Refurbish Python code
 ]
 lint.unfixable = []
 
@@ -169,8 +164,8 @@ line-length = 120
 # Allow unused variables when underscore-prefixed.
 lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-# Assume Python 3.12
-target-version = "py312"
+# Assume Python 3.13
+target-version = "py313"
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.
@@ -208,25 +203,34 @@ line-ending = "auto"
 ]
 
 [tool.tox]
-legacy_tox_ini = """
-[testenv]
-# Django deprecation overview: https://www.djangoproject.com/download/
-deps =
-    django42: Django==4.2.*
-    django51: Django==5.1.*
-    django52: Django==5.2.*
-extras = dev,
-commands =
-    coverage run -m pytest --ds settings tests
+requires = ["tox>=4", "tox-uv>=1.0.0"]
+env_list = ["django42", "django51", "django52", ]
 
-[gh-actions]
-python =
-    3.9: py39
-    3.10: py310
-    3.11: py311
-    3.12: py312
-    3.13: py313
-"""
+[tool.tox.env_run_base]
+# Django deprecation overview: https://www.djangoproject.com/download/
+package = "wheel"
+wheel_build_env = ".pkg"
+runner = "uv-venv-lock-runner"
+dependency_groups = ["dev", ]
+commands = [
+    ["pytest", "--cov=django_pony_express", "--cov-report=term", "--cov-report=xml", "--ds", "settings", "tests"]
+]
+
+[tool.tox.env.django42]
+deps = ["Django==4.2.*"]
+
+[tool.tox.env.django51]
+deps = ["Django==5.1.*"]
+
+[tool.tox.env.django52]
+deps = ["Django==5.2.*"]
+
+[tool.tox.gh_actions.python]
+"3.10" = "py310"
+"3.11" = "py311"
+"3.12" = "py312"
+"3.13" = "py313"
+"3.14" = "py314"
 
 [tool.pytest.ini_options]
 python_files = [
@@ -268,3 +272,6 @@ source = [
     "django_pony_express",
     ".tox/**/site-packages",
 ]
+
+[tool.hatch.version]
+path = "django_pony_express/__init__.py"

@@ -3,9 +3,8 @@
 ## Setup package for development
 
 - Create a Python virtualenv and activate it
-- Install "pip-tools" with `pip install -U pip-tools`
-- Compile the requirements with `pip-compile --extra dev, -o requirements.txt pyproject.toml --resolver=backtracking`
-- Sync the dependencies with your virtualenv with `pip-sync`
+- Install "uv" with `pip install -U uv`
+- Sync the requirements with `uv sync --frozen --group dev`
 
 ## Add functionality
 
@@ -58,7 +57,6 @@ Example: run all hooks of pre-push stage
 - To build the documentation, run: `sphinx-build docs/ docs/_build/html/`.
 - Open `docs/_build/html/index.html` to see the documentation.
 
-
 ### Translation files
 
 If you have added custom text, make sure to wrap it in `_()` where `_` is
@@ -66,12 +64,12 @@ gettext_lazy (`from django.utils.translation import gettext_lazy as _`).
 
 How to create translation file:
 
-* Navigate to `django-pony-express`
+* Navigate to `django_pony_express`
 * `python manage.py makemessages -l de`
 * Have a look at the new/changed files within `django_pony_express/locale`
 
 How to compile translation files:
 
-* Navigate to `django-pony-express`
+* Navigate to `django_pony_express`
 * `python manage.py compilemessages`
 * Have a look at the new/changed files within `django_pony_express/locale`
