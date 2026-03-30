@@ -1,5 +1,8 @@
 # Changelog
 
+**2.7.8** (2026-03-30)
+  * Maintenance updates via ambient-package-update
+
 **2.7.7** (2026-03-30)
   * Maintenance updates via ambient-package-update
 
