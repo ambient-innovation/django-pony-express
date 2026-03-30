@@ -149,9 +149,9 @@ class BaseEmailService:
         if isinstance(recipient_email_list, str):
             recipient_email_list = [recipient_email_list]
 
-        self.recipient_email_list = recipient_email_list if recipient_email_list else []
-        self.context_data = context_data if context_data else {}
-        self.attachment_list = attachment_list if attachment_list else []
+        self.recipient_email_list = recipient_email_list or []
+        self.context_data = context_data or {}
+        self.attachment_list = attachment_list or []
         self.connection = connection
 
     def _get_logger(self) -> logging.Logger:
@@ -178,7 +178,7 @@ class BaseEmailService:
         """
         Use set `FROM_EMAIL` or the django base `DEFAULT_FROM_EMAIL` if it is not set
         """
-        return self.FROM_EMAIL if self.FROM_EMAIL else settings.DEFAULT_FROM_EMAIL
+        return self.FROM_EMAIL or settings.DEFAULT_FROM_EMAIL
 
     def get_cc_emails(self) -> list:
         """
