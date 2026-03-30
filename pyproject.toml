@@ -48,6 +48,7 @@ dev = [
    'sphinx-rtd-theme~=3.0',
    'm2r2~=0.3',
    'uv~=0.9',
+   'keyring~=25.7',
    'ambient-package-update',
    'time_machine~=2.16',
 ]
@@ -275,3 +276,6 @@ source = [
 
 [tool.hatch.version]
 path = "django_pony_express/__init__.py"
+
+[tool.uv]
+keyring-provider = "subprocess"
