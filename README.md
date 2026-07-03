@@ -13,7 +13,7 @@ emails in Django.
 
 [PyPI](https://pypi.org/project/django-pony-express/) • [GitHub](https://github.com/ambient-innovation/django-pony-express) • [Full documentation](https://django-pony-express.readthedocs.io/en/latest/index.html)
 
-Creator & Maintainer: [Ambient Digital](https://ambient.digital/)
+Creator & Maintainer: [Beyonder Deutschland](https://beyonder.de/)
 
 ## Features
 
