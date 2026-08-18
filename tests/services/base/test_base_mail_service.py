@@ -1,6 +1,7 @@
 import datetime
 import logging
 from os.path import basename
+from smtplib import SMTPServerDisconnected
 from unittest import mock
 
 import time_machine
@@ -12,6 +13,7 @@ from django.utils import translation
 
 from django_pony_express.errors import EmailServiceAttachmentError, EmailServiceConfigError
 from django_pony_express.services.base import BaseEmailService
+from testapp.mail_backends import BROKEN_EMAIL_BACKEND
 
 
 class BaseEmailServiceTest(TestCase):
@@ -44,6 +46,29 @@ class BaseEmailServiceTest(TestCase):
         self.assertGreater(len(mail.outbox), 0)
         self.assertEqual(mail.outbox[0].subject, "My subject")
         self.assertEqual(mail.outbox[0].to, ["dummy@example.com"])
+
+    def test_get_connection_regular(self):
+        connection = mail.get_connection()
+        service = BaseEmailService(recipient_email_list=["dummy@example.com"], connection=connection)
+
+        self.assertIs(service.get_connection(), connection)
+
+    def test_get_connection_not_set(self):
+        self.assertIsNone(BaseEmailService(recipient_email_list=["dummy@example.com"]).get_connection())
+
+    def test_build_mail_object_uses_get_connection(self):
+        connection = mail.get_connection(fail_silently=True)
+
+        class MyEmailService(BaseEmailService):
+            subject = "My subject"
+            template_name = "testapp/test_email.html"
+
+            def get_connection(self):
+                return connection
+
+        msg = MyEmailService(recipient_email_list=["dummy@example.com"])._build_mail_object()
+
+        self.assertIs(msg.connection, connection)
 
     def test_get_logger_logger_not_set(self):
         service = BaseEmailService()
@@ -416,10 +441,14 @@ class BaseEmailServiceTest(TestCase):
     def test_send_and_log_email_failure_privacy_active(self, mock_logger, *args):
         service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
         result = service._send_and_log_email(
-            msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
+            msg=EmailMultiAlternatives(
+                subject="The Pony Express",
+                to=["thomas.aquin@example.com"],
+                connection=mail.get_connection(fail_silently=True),
+            )
         )
 
-        mock_logger.error('An error occurred sending email "%s": %s', "The Pony Express", "Broken pony")
+        mock_logger.exception.assert_called_with('An error occurred sending email "The Pony Express".')
         self.assertFalse(result)
 
     @mock.patch.object(EmailMultiAlternatives, "send", side_effect=Exception("Broken pony"))
@@ -428,16 +457,101 @@ class BaseEmailServiceTest(TestCase):
     def test_send_and_log_failure_privacy_inactive(self, mock_logger, *args):
         service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
         result = service._send_and_log_email(
+            msg=EmailMultiAlternatives(
+                subject="The Pony Express",
+                to=["thomas.aquin@example.com"],
+                connection=mail.get_connection(fail_silently=True),
+            )
+        )
+
+        mock_logger.exception.assert_called_with(
+            'An error occurred sending email "The Pony Express" to "thomas.aquin@example.com".'
+        )
+        self.assertFalse(result)
+
+    @mock.patch.object(EmailMultiAlternatives, "send", side_effect=Exception("Broken pony"))
+    @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
+    def test_send_and_log_email_raises_on_default_connection(self, mock_logger, *args):
+        """
+        Django creates connections with "fail_silently=False" by default, so not passing a connection means that
+        errors are propagated to the caller.
+        """
+        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
+
+        with self.assertRaisesMessage(Exception, "Broken pony"):
+            service._send_and_log_email(
+                msg=EmailMultiAlternatives(
+                    subject="The Pony Express",
+                    to=["thomas.aquin@example.com"],
+                    connection=mail.get_connection(),
+                )
+            )
+
+        mock_logger.exception.assert_called_with('An error occurred sending email "The Pony Express".')
+
+    @mock.patch.object(EmailMultiAlternatives, "send", side_effect=Exception("Broken pony"))
+    @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
+    def test_send_and_log_email_raises_when_connection_could_not_be_established(self, *args):
+        """
+        A message without a connection means that django never got as far as building one, which points at a broken
+        configuration and must not be swallowed.
+        """
+        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
+        msg = EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
+        self.assertIsNone(msg.connection)
+
+        with self.assertRaisesMessage(Exception, "Broken pony"):
+            service._send_and_log_email(msg=msg)
+
+    @mock.patch.object(EmailMultiAlternatives, "send", side_effect=Exception("Broken pony"))
+    @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
+    def test_send_and_log_email_respects_should_fail_silently_override(self, *args):
+        class SilentEmailService(BaseEmailService):
+            def _should_fail_silently(self, msg: EmailMultiAlternatives) -> bool:
+                return True
+
+        service = SilentEmailService(recipient_email_list=["thomas.aquin@example.com"])
+        result = service._send_and_log_email(
             msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
         )
 
-        mock_logger.error(
-            'An error occurred sending email "%s" to %s: %s',
-            "The Pony Express",
-            "thomas.aquin@example.com",
-            "Broken pony",
-        )
         self.assertFalse(result)
+
+    def test_should_fail_silently_regular(self):
+        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
+
+        self.assertTrue(
+            service._should_fail_silently(EmailMultiAlternatives(connection=mail.get_connection(fail_silently=True)))
+        )
+        self.assertFalse(
+            service._should_fail_silently(EmailMultiAlternatives(connection=mail.get_connection(fail_silently=False)))
+        )
+        self.assertFalse(service._should_fail_silently(EmailMultiAlternatives()))
+
+    @mock.patch.object(EmailMultiAlternatives, "send", return_value=0)
+    @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
+    def test_send_and_log_email_logs_warning_when_nothing_was_sent(self, mock_logger, *args):
+        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
+        result = service._send_and_log_email(
+            msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
+        )
+
+        self.assertFalse(result)
+        mock_logger.info.assert_not_called()
+        mock_logger.warning.assert_called_with('Email "The Pony Express" was not sent.')
+
+    @mock.patch.object(EmailMultiAlternatives, "send", return_value=0)
+    @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
+    @mock.patch("django_pony_express.services.base.PONY_LOG_RECIPIENTS", True)
+    def test_send_and_log_email_logs_warning_when_nothing_was_sent_privacy_inactive(self, mock_logger, *args):
+        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
+        result = service._send_and_log_email(
+            msg=EmailMultiAlternatives(subject="The Pony Express", to=["thomas.aquin@example.com"])
+        )
+
+        self.assertFalse(result)
+        mock_logger.info.assert_not_called()
+        mock_logger.warning.assert_called_with('Email "The Pony Express" was not sent to thomas.aquin@example.com.')
 
     @mock.patch.object(EmailMultiAlternatives, "send", return_value=1)
     def test_send_and_log_email_returns_true_when_msg_send_returns_one(self, mock_send):
@@ -466,6 +580,27 @@ class BaseEmailServiceTest(TestCase):
         service.subject = subject
         service.template_name = "testapp/test_email.html"
         self.assertTrue(service.process())
+
+    def test_process_propagates_backend_error(self):
+        service = BaseEmailService(
+            recipient_email_list=["albertus.magnus@example.com"],
+            connection=mail.get_connection(backend=BROKEN_EMAIL_BACKEND, fail_silently=False),
+        )
+        service.subject = "Test email"
+        service.template_name = "testapp/test_email.html"
+
+        with self.assertRaisesMessage(SMTPServerDisconnected, "connection lost"):
+            service.process()
+
+    def test_process_swallows_backend_error_when_failing_silently(self):
+        service = BaseEmailService(
+            recipient_email_list=["albertus.magnus@example.com"],
+            connection=mail.get_connection(backend=BROKEN_EMAIL_BACKEND, fail_silently=True),
+        )
+        service.subject = "Test email"
+        service.template_name = "testapp/test_email.html"
+
+        self.assertFalse(service.process())
 
     def test_process_with_error(self):
         subject = "Test email"

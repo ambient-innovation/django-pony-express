@@ -52,4 +52,16 @@
 
 
 * ``process()``
-  Executes the actual sending. Not recommended to change.
+  Executes the actual sending. Not recommended to change. Returns `True` if the email was sent. Errors occurring while
+  sending are logged and then raised, unless the used connection was created with `fail_silently=True`. The keyword
+  argument `raise_exception` only affects configuration errors, not sending errors.
+
+
+* ``get_connection()``
+  Returns the connection the email is sent with. Returns `None` by default, which lets django create one. Override it
+  to provide your own, for example to make a factory batch fail silently.
+
+
+* ``_should_fail_silently(msg)``
+  Decides whether an error occurring while sending is swallowed or propagated to the caller. Defaults to the
+  `fail_silently` flag of the connection used for sending. See "Error handling" in the configuration chapter.

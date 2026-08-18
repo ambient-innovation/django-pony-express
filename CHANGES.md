@@ -1,5 +1,33 @@
 # Changelog
 
+**3.0.0** (2026-08-18)
+  * **Breaking change:** `BaseEmailService._send_and_log_email()` no longer swallows every error occurring while
+    sending. Errors are still logged, but they are now propagated to the caller unless the used connection was created
+    with `fail_silently=True`. Since django creates connections with `fail_silently=False` by default, this affects
+    every service which doesn't explicitly pass a connection (#44)
+  * **Breaking change:** `BaseEmailServiceFactory.process()` now only counts emails the service class reported as
+    processed, instead of counting every attempt. Note that `ThreadEmailService` reports an email as processed once it
+    was handed over to a thread, since it can't know whether it was delivered
+  * Fixed a bug where `BaseEmailServiceFactory.process()` didn't pass `raise_exception` on to the emails it creates,
+    so an invalid email aborted the batch even when the caller asked for `raise_exception=False`
+  * **Breaking change:** `ThreadEmailService.process()` returns a boolean stating whether the email was handed over to
+    a thread, instead of returning `None`
+  * Added the accessor `BaseEmailService.get_connection()`, which follows the `get_*()` convention of the other
+    configurable attributes and is the override point for providing a connection to services created by a factory
+  * Fixed a bug where a mail which wasn't delivered (`msg.send()` returning `0`) was logged as "successfully sent".
+    This case is logged as a warning now
+  * Added the overridable hook `BaseEmailService._should_fail_silently()` to customise the new error handling
+  * Added missing and updated outdated German translations
+
+  *Migration notes:*
+  * To keep the previous behaviour, pass a connection which fails silently:
+    `MyEmailService(..., connection=get_connection(fail_silently=True))`
+  * Batch sends via `BaseEmailServiceFactory` now abort on the first failing recipient. A factory doesn't pass a
+    connection to the services it creates, so if you want the batch to continue, override `get_connection()` in your
+    service class and return a connection created with `fail_silently=True`
+  * `ThreadEmailService` can't propagate errors to the caller. They now surface via `threading.excepthook` (and
+    therefore in your error monitoring) instead of being silently logged away
+
 **2.8.1** (2026-07-03)
   * Updated company and maintainer information to "Beyonder Deutschland"
 

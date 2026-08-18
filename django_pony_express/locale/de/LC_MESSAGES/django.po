@@ -1,63 +1,79 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# German translations for the django-pony-express package.
+# Copyright (C) 2023 Beyonder Deutschland GmbH
+# This file is distributed under the same license as the django-pony-express package.
+# Beyonder Deutschland <hello@beyonder.de>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: django-pony-express\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 17:11+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2026-08-18 14:06+0200\n"
+"PO-Revision-Date: 2026-08-18 13:53+0200\n"
+"Last-Translator: Beyonder Deutschland <hello@beyonder.de>\n"
+"Language-Team: German\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\django_pony_express\services\base.py:44
+#: .\django_pony_express\services\base.py:45
 msgid "Email factory requires a mail service class."
 msgstr "E-Mailfactory benötigt eine Mailservice-Klasse."
 
-#: .\django_pony_express\services\base.py:46
+#: .\django_pony_express\services\base.py:47
 msgid "Email factory requires a target mail address."
 msgstr "E-Mailfactory benötigt eine Ziel-Mailadresse."
 
-#: .\django_pony_express\services\base.py:225
+#: .\django_pony_express\services\base.py:241
 msgid "Missing or mislabeled data provided for email attachment."
 msgstr "Fehlende oder falsch deklarierte Daten für E-Mailanhänge übergeben."
 
-#: .\django_pony_express\services\base.py:282
+#: .\django_pony_express\services\base.py:318
 msgid "Email service requires a subject."
 msgstr "E-Mailservice benötigt einen Betreff."
 
-#: .\django_pony_express\services\base.py:284
+#: .\django_pony_express\services\base.py:320
 msgid "Email service requires a template."
 msgstr "E-Mailservice benötigt ein Template."
 
-#: .\django_pony_express\services\base.py:286
+#: .\django_pony_express\services\base.py:322
 msgid "Email service requires a target mail address."
 msgstr "E-Mailservice benötigt eine Ziel-Mailadresse."
 
-#: .\django_pony_express\services\base.py:316
+#: .\django_pony_express\services\base.py:326
+#, python-brace-format
+msgid "Email service received ill-formatted email address \"{email}\""
+msgstr ""
+"E-Mailservice hat die ungültig formatierte E-Mailadresse \"{email}\" "
+"erhalten."
+
+#: .\django_pony_express\services\base.py:362
 #, python-format
 msgid "Email \"%s\" successfully sent to %s."
 msgstr "E-Mail \"%s\" erfolgreich versendet an %s."
 
-#: .\django_pony_express\services\base.py:318
+#: .\django_pony_express\services\base.py:364
 #, python-format
 msgid "Email \"%s\" successfully sent."
 msgstr "E-Mail \"%s\" erfolgreich versendet."
 
-#: .\django_pony_express\services\base.py:322
+#: .\django_pony_express\services\base.py:366
 #, python-format
-msgid "An error occurred sending email \"%s\" to %s: %s"
-msgstr "Beim Versenden der E-Mail \"%s\" an %s ist ein Fehler aufgetreten: %s"
+msgid "Email \"%s\" was not sent to %s."
+msgstr "E-Mail \"%s\" wurde nicht an %s versendet."
 
-#: .\django_pony_express\services\base.py:325
+#: .\django_pony_express\services\base.py:368
 #, python-format
-msgid "An error occurred sending email \"%s\": %s"
-msgstr "Beim Versenden der E-Mail \"%s\" ist ein Fehler aufgetreten: %s"
+msgid "Email \"%s\" was not sent."
+msgstr "E-Mail \"%s\" wurde nicht versendet."
+
+#: .\django_pony_express\services\base.py:384
+#, python-format
+msgid "An error occurred sending email \"%s\" to \"%s\"."
+msgstr "Beim Versenden der E-Mail \"%s\" an \"%s\" ist ein Fehler aufgetreten."
+
+#: .\django_pony_express\services\base.py:387
+#, python-format
+msgid "An error occurred sending email \"%s\"."
+msgstr "Beim Versenden der E-Mail \"%s\" ist ein Fehler aufgetreten."
