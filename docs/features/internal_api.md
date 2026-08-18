@@ -52,4 +52,11 @@
 
 
 * ``process()``
-  Executes the actual sending. Not recommended to change.
+  Executes the actual sending. Not recommended to change. Returns `True` if the email was sent. Errors occurring while
+  sending are logged and then raised, unless the used connection was created with `fail_silently=True`. The keyword
+  argument `raise_exception` only affects configuration errors, not sending errors.
+
+
+* ``_should_fail_silently(msg)``
+  Decides whether an error occurring while sending is swallowed or propagated to the caller. Defaults to the
+  `fail_silently` flag of the connection used for sending. Override it if you want to decide this differently.

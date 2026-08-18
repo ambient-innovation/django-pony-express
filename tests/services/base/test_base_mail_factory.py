@@ -1,8 +1,12 @@
+from smtplib import SMTPServerDisconnected
+from threading import Thread
 from unittest import mock
 
+from django.core import mail
 from django.test import TestCase
 
 from django_pony_express.errors import EmailServiceConfigError
+from django_pony_express.services.asynchronous.thread import ThreadEmailService
 from django_pony_express.services.base import BaseEmailService, BaseEmailServiceFactory
 
 
@@ -76,6 +80,48 @@ class BaseEmailServiceFactoryTest(TestCase):
         factory = BaseEmailServiceFactory(recipient_email_list=[email_1, email_2])
         factory.service_class = self.TestMailService
         self.assertEqual(factory.process(), 2)
+
+    @mock.patch.object(BaseEmailService, "process", return_value=False)
+    def test_process_counts_sent_emails_only(self, *args):
+        email_1 = "albertus.magnus@example.com"
+        email_2 = "thomas.von.aquin@example.com"
+        factory = BaseEmailServiceFactory(recipient_email_list=[email_1, email_2])
+        factory.service_class = self.TestMailService
+        self.assertEqual(factory.process(), 0)
+
+    @mock.patch.object(Thread, "start")
+    def test_process_counts_emails_handed_over_to_a_thread(self, mocked_start):
+        class ThreadMailService(ThreadEmailService):
+            subject = "My subject"
+            template_name = "testapp/test_email.html"
+
+        factory = BaseEmailServiceFactory(
+            recipient_email_list=["albertus.magnus@example.com", "thomas.von.aquin@example.com"]
+        )
+        factory.service_class = ThreadMailService
+
+        self.assertEqual(factory.process(), 2)
+        self.assertEqual(mocked_start.call_count, 2)
+
+    def test_process_uses_connection_of_service_class(self):
+        class SilentMailService(self.TestMailService):
+            connection = mail.get_connection(backend="testapp.mail_backends.BrokenEmailBackend", fail_silently=True)
+
+        factory = BaseEmailServiceFactory(recipient_email_list=["albertus.magnus@example.com"])
+        factory.service_class = SilentMailService
+
+        self.assertEqual(factory.process(), 0)
+
+    def test_process_propagates_send_errors(self):
+        class BrokenMailService(self.TestMailService):
+            def _send_and_log_email(self, msg):
+                raise SMTPServerDisconnected("connection lost")
+
+        factory = BaseEmailServiceFactory(recipient_email_list=["albertus.magnus@example.com"])
+        factory.service_class = BrokenMailService
+
+        with self.assertRaisesMessage(SMTPServerDisconnected, "connection lost"):
+            factory.process()
 
     def test_process_with_exception(self):
         factory = BaseEmailServiceFactory()

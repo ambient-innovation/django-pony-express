@@ -90,6 +90,8 @@ class BaseEmailServiceFactory:
         Create an email of `self.service_class` for every recipient. Per-email logic like setting the salutation
         is handled within each email class.
         Returns the number of sent emails.
+        Note that a failing email will abort the whole batch unless a connection created with "fail_silently=True"
+        is used by the mail service.
         """
         counter = 0
         if self.is_valid(raise_exception=raise_exception):
@@ -98,8 +100,8 @@ class BaseEmailServiceFactory:
                     recipient_email_list=[self.get_email_from_recipient(recipient)],
                     context_data={"recipient": recipient, **self.get_context_data()},
                 )
-                email_object.process()
-                counter += 1
+                if email_object.process():
+                    counter += 1
 
         return counter
 
@@ -152,7 +154,9 @@ class BaseEmailService:
         self.recipient_email_list = recipient_email_list or []
         self.context_data = context_data or {}
         self.attachment_list = attachment_list or []
-        self.connection = connection
+        # Falling back to the class attribute enables setting a connection statically in the class definition,
+        # which is the only way to reach services created by a factory.
+        self.connection = connection or self.connection
 
     def _get_logger(self) -> logging.Logger:
         self._logger = logging.getLogger(PONY_LOGGER_NAME) if self._logger is None else self._logger
@@ -335,9 +339,34 @@ class BaseEmailService:
         """
         return self._errors
 
+    def _should_fail_silently(self, msg: EmailMultiAlternatives) -> bool:
+        """
+        Decides whether an error occurring while sending is swallowed or propagated to the caller.
+        Mirrors django: the connection used for sending is the single source of truth. If no connection could be
+        established at all, we don't swallow, since that points at a broken configuration.
+        """
+        return getattr(msg.connection, "fail_silently", False)
+
+    def _log_send_result(self, msg: EmailMultiAlternatives, *, result: bool, recipients_as_string: str) -> None:
+        """
+        Logs the outcome of a send attempt which didn't raise. Note that "result" being False means that the backend
+        accepted the message but didn't deliver it, so this is explicitly not a success.
+        """
+        if result:
+            if PONY_LOG_RECIPIENTS:
+                self._logger.info(_('Email "%s" successfully sent to %s.') % (msg.subject, recipients_as_string))
+            else:
+                self._logger.info(_('Email "%s" successfully sent.') % msg.subject)
+        elif PONY_LOG_RECIPIENTS:
+            self._logger.warning(_('Email "%s" was not sent to %s.') % (msg.subject, recipients_as_string))
+        else:
+            self._logger.warning(_('Email "%s" was not sent.') % msg.subject)
+
     def _send_and_log_email(self, msg: EmailMultiAlternatives) -> bool:
         """
         Method to be called by the thread. Enables logging since we won't have any sync return values.
+        Errors are always logged. Additionally, they are propagated to the caller unless the used connection was
+        created with "fail_silently=True", which is django's documented way of asking for quiet delivery.
         """
         result = False
         recipients_as_string = " ".join(self.recipient_email_list)
@@ -345,10 +374,6 @@ class BaseEmailService:
             # msg.send() returns an int: 0 if no recipients exist, 1 if the message sending was successful
             # Since we want to return a boolean, we check for "== 1" here
             result = msg.send() == 1
-            if PONY_LOG_RECIPIENTS:
-                self._logger.info(_('Email "%s" successfully sent to %s.') % (msg.subject, recipients_as_string))
-            else:
-                self._logger.info(_('Email "%s" successfully sent.') % msg.subject)
         except Exception:
             if PONY_LOG_RECIPIENTS:
                 self._logger.exception(
@@ -356,6 +381,10 @@ class BaseEmailService:
                 )
             else:
                 self._logger.exception(_('An error occurred sending email "%s".') % msg.subject)
+            if not self._should_fail_silently(msg):
+                raise
+        else:
+            self._log_send_result(msg, result=result, recipients_as_string=recipients_as_string)
 
         return result
 
