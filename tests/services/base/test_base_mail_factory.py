@@ -8,6 +8,7 @@ from django.test import TestCase
 from django_pony_express.errors import EmailServiceConfigError
 from django_pony_express.services.asynchronous.thread import ThreadEmailService
 from django_pony_express.services.base import BaseEmailService, BaseEmailServiceFactory
+from testapp.mail_backends import BROKEN_EMAIL_BACKEND
 
 
 class BaseEmailServiceFactoryTest(TestCase):
@@ -103,9 +104,10 @@ class BaseEmailServiceFactoryTest(TestCase):
         self.assertEqual(factory.process(), 2)
         self.assertEqual(mocked_start.call_count, 2)
 
-    def test_process_uses_connection_of_service_class(self):
+    def test_process_uses_get_connection_of_service_class(self):
         class SilentMailService(self.TestMailService):
-            connection = mail.get_connection(backend="testapp.mail_backends.BrokenEmailBackend", fail_silently=True)
+            def get_connection(self):
+                return mail.get_connection(backend=BROKEN_EMAIL_BACKEND, fail_silently=True)
 
         factory = BaseEmailServiceFactory(recipient_email_list=["albertus.magnus@example.com"])
         factory.service_class = SilentMailService

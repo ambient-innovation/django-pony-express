@@ -13,8 +13,7 @@ from django.utils import translation
 
 from django_pony_express.errors import EmailServiceAttachmentError, EmailServiceConfigError
 from django_pony_express.services.base import BaseEmailService
-
-BROKEN_EMAIL_BACKEND = "testapp.mail_backends.BrokenEmailBackend"
+from testapp.mail_backends import BROKEN_EMAIL_BACKEND
 
 
 class BaseEmailServiceTest(TestCase):
@@ -48,22 +47,28 @@ class BaseEmailServiceTest(TestCase):
         self.assertEqual(mail.outbox[0].subject, "My subject")
         self.assertEqual(mail.outbox[0].to, ["dummy@example.com"])
 
-    def test_init_connection_falls_back_to_class_attribute(self):
-        class MyEmailService(BaseEmailService):
-            connection = mail.get_connection(fail_silently=True)
-
-        service = MyEmailService(recipient_email_list=["dummy@example.com"])
-
-        self.assertIs(service.connection, MyEmailService.connection)
-
-    def test_init_connection_argument_beats_class_attribute(self):
-        class MyEmailService(BaseEmailService):
-            connection = mail.get_connection(fail_silently=True)
-
+    def test_get_connection_regular(self):
         connection = mail.get_connection()
-        service = MyEmailService(recipient_email_list=["dummy@example.com"], connection=connection)
+        service = BaseEmailService(recipient_email_list=["dummy@example.com"], connection=connection)
 
-        self.assertIs(service.connection, connection)
+        self.assertIs(service.get_connection(), connection)
+
+    def test_get_connection_not_set(self):
+        self.assertIsNone(BaseEmailService(recipient_email_list=["dummy@example.com"]).get_connection())
+
+    def test_build_mail_object_uses_get_connection(self):
+        connection = mail.get_connection(fail_silently=True)
+
+        class MyEmailService(BaseEmailService):
+            subject = "My subject"
+            template_name = "testapp/test_email.html"
+
+            def get_connection(self):
+                return connection
+
+        msg = MyEmailService(recipient_email_list=["dummy@example.com"])._build_mail_object()
+
+        self.assertIs(msg.connection, connection)
 
     def test_get_logger_logger_not_set(self):
         service = BaseEmailService()
@@ -483,20 +488,6 @@ class BaseEmailServiceTest(TestCase):
             )
 
         mock_logger.exception.assert_called_with('An error occurred sending email "The Pony Express".')
-
-    @mock.patch.object(EmailMultiAlternatives, "send", side_effect=Exception("Broken pony"))
-    @mock.patch("django_pony_express.services.base.BaseEmailService._logger")
-    def test_send_and_log_email_raises_on_fail_silently_false_connection(self, *args):
-        service = BaseEmailService(recipient_email_list=["thomas.aquin@example.com"])
-
-        with self.assertRaisesMessage(Exception, "Broken pony"):
-            service._send_and_log_email(
-                msg=EmailMultiAlternatives(
-                    subject="The Pony Express",
-                    to=["thomas.aquin@example.com"],
-                    connection=mail.get_connection(fail_silently=False),
-                )
-            )
 
     @mock.patch.object(EmailMultiAlternatives, "send", side_effect=Exception("Broken pony"))
     @mock.patch("django_pony_express.services.base.BaseEmailService._logger")

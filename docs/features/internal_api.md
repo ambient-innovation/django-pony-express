@@ -57,6 +57,11 @@
   argument `raise_exception` only affects configuration errors, not sending errors.
 
 
+* ``get_connection()``
+  Returns the connection the email is sent with. Returns `None` by default, which lets django create one. Override it
+  to provide your own, for example to make a factory batch fail silently.
+
+
 * ``_should_fail_silently(msg)``
   Decides whether an error occurring while sending is swallowed or propagated to the caller. Defaults to the
-  `fail_silently` flag of the connection used for sending. Override it if you want to decide this differently.
+  `fail_silently` flag of the connection used for sending. See "Error handling" in the configuration chapter.

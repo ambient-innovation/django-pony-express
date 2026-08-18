@@ -9,8 +9,8 @@
     of counting every attempt
   * **Breaking change:** `ThreadEmailService.process()` returns a boolean stating whether the email was handed over to
     a thread, instead of returning `None`
-  * `BaseEmailService.__init__()` falls back to a `connection` set in the class definition, instead of always
-    overwriting it with the constructor argument
+  * Added the accessor `BaseEmailService.get_connection()`, which follows the `get_*()` convention of the other
+    configurable attributes and is the override point for providing a connection to services created by a factory
   * Fixed a bug where a mail which wasn't delivered (`msg.send()` returning `0`) was logged as "successfully sent".
     This case is logged as a warning now
   * Added the overridable hook `BaseEmailService._should_fail_silently()` to customise the new error handling
@@ -20,8 +20,8 @@
   * To keep the previous behaviour, pass a connection which fails silently:
     `MyEmailService(..., connection=get_connection(fail_silently=True))`
   * Batch sends via `BaseEmailServiceFactory` now abort on the first failing recipient. A factory doesn't pass a
-    connection to the services it creates, so if you want the batch to continue, set
-    `connection = get_connection(fail_silently=True)` in your service class or override `_should_fail_silently()`
+    connection to the services it creates, so if you want the batch to continue, override `get_connection()` in your
+    service class and return a connection created with `fail_silently=True`
   * `ThreadEmailService` can't propagate errors to the caller. They now surface via `threading.excepthook` (and
     therefore in your error monitoring) instead of being silently logged away
 

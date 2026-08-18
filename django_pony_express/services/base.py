@@ -89,9 +89,8 @@ class BaseEmailServiceFactory:
         """
         Create an email of `self.service_class` for every recipient. Per-email logic like setting the salutation
         is handled within each email class.
-        Returns the number of sent emails.
-        Note that a failing email will abort the whole batch unless a connection created with "fail_silently=True"
-        is used by the mail service.
+        Returns the number of emails the service class reported as processed. Note that a failing email will abort
+        the whole batch unless the service class sends with a connection created with "fail_silently=True".
         """
         counter = 0
         if self.is_valid(raise_exception=raise_exception):
@@ -154,9 +153,7 @@ class BaseEmailService:
         self.recipient_email_list = recipient_email_list or []
         self.context_data = context_data or {}
         self.attachment_list = attachment_list or []
-        # Falling back to the class attribute enables setting a connection statically in the class definition,
-        # which is the only way to reach services created by a factory.
-        self.connection = connection or self.connection
+        self.connection = connection
 
     def _get_logger(self) -> logging.Logger:
         self._logger = logging.getLogger(PONY_LOGGER_NAME) if self._logger is None else self._logger
@@ -215,6 +212,15 @@ class BaseEmailService:
             )
         except TypeError:
             return None
+
+    def get_connection(self) -> BaseEmailBackend | None:
+        """
+        Returns the connection used for sending. Returning `None` lets django create one, which is what you want in
+        most cases. Override this to create a connection per email, for example to make a whole factory batch fail
+        silently. Take care not to return a connection which is shared between instances, since django's backends
+        serialise every send through a per-instance lock.
+        """
+        return self.connection
 
     def get_attachments(self) -> list:
         """
@@ -284,7 +290,7 @@ class BaseEmailService:
             bcc=self.get_bcc_emails(),
             reply_to=self.get_reply_to_emails(),
             to=self.recipient_email_list,
-            connection=self.connection,
+            connection=self.get_connection(),
         )
         msg.attach_alternative(html_content, "text/html")
 
@@ -352,11 +358,10 @@ class BaseEmailService:
         Logs the outcome of a send attempt which didn't raise. Note that "result" being False means that the backend
         accepted the message but didn't deliver it, so this is explicitly not a success.
         """
-        if result:
-            if PONY_LOG_RECIPIENTS:
-                self._logger.info(_('Email "%s" successfully sent to %s.') % (msg.subject, recipients_as_string))
-            else:
-                self._logger.info(_('Email "%s" successfully sent.') % msg.subject)
+        if result and PONY_LOG_RECIPIENTS:
+            self._logger.info(_('Email "%s" successfully sent to %s.') % (msg.subject, recipients_as_string))
+        elif result:
+            self._logger.info(_('Email "%s" successfully sent.') % msg.subject)
         elif PONY_LOG_RECIPIENTS:
             self._logger.warning(_('Email "%s" was not sent to %s.') % (msg.subject, recipients_as_string))
         else:
@@ -368,7 +373,6 @@ class BaseEmailService:
         Errors are always logged. Additionally, they are propagated to the caller unless the used connection was
         created with "fail_silently=True", which is django's documented way of asking for quiet delivery.
         """
-        result = False
         recipients_as_string = " ".join(self.recipient_email_list)
         try:
             # msg.send() returns an int: 0 if no recipients exist, 1 if the message sending was successful
@@ -383,8 +387,9 @@ class BaseEmailService:
                 self._logger.exception(_('An error occurred sending email "%s".') % msg.subject)
             if not self._should_fail_silently(msg):
                 raise
-        else:
-            self._log_send_result(msg, result=result, recipients_as_string=recipients_as_string)
+            return False
+
+        self._log_send_result(msg, result=result, recipients_as_string=recipients_as_string)
 
         return result
 

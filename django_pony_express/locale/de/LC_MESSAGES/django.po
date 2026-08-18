@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-18 10:59+0200\n"
+"POT-Creation-Date: 2026-08-18 13:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,54 +26,55 @@ msgstr "E-Mailfactory benötigt eine Mailservice-Klasse."
 msgid "Email factory requires a target mail address."
 msgstr "E-Mailfactory benötigt eine Ziel-Mailadresse."
 
-#: .\services\base.py:233
+#: .\services\base.py:241
 msgid "Missing or mislabeled data provided for email attachment."
 msgstr "Fehlende oder falsch deklarierte Daten für E-Mailanhänge übergeben."
 
-#: .\services\base.py:310
+#: .\services\base.py:318
 msgid "Email service requires a subject."
 msgstr "E-Mailservice benötigt einen Betreff."
 
-#: .\services\base.py:312
+#: .\services\base.py:320
 msgid "Email service requires a template."
 msgstr "E-Mailservice benötigt ein Template."
 
-#: .\services\base.py:314
+#: .\services\base.py:322
 msgid "Email service requires a target mail address."
 msgstr "E-Mailservice benötigt eine Ziel-Mailadresse."
 
-#: .\services\base.py:318
+#: .\services\base.py:326
 #, python-brace-format
 msgid "Email service received ill-formatted email address \"{email}\""
 msgstr ""
-"E-Mailservice hat die ungültig formatierte E-Mailadresse \"{email}\" erhalten."
+"E-Mailservice hat die ungültig formatierte E-Mailadresse \"{email}\" "
+"erhalten."
 
-#: .\services\base.py:355
+#: .\services\base.py:362
 #, python-format
 msgid "Email \"%s\" successfully sent to %s."
 msgstr "E-Mail \"%s\" erfolgreich versendet an %s."
 
-#: .\services\base.py:357
+#: .\services\base.py:364
 #, python-format
 msgid "Email \"%s\" successfully sent."
 msgstr "E-Mail \"%s\" erfolgreich versendet."
 
-#: .\services\base.py:359
+#: .\services\base.py:366
 #, python-format
 msgid "Email \"%s\" was not sent to %s."
 msgstr "E-Mail \"%s\" wurde nicht an %s versendet."
 
-#: .\services\base.py:361
+#: .\services\base.py:368
 #, python-format
 msgid "Email \"%s\" was not sent."
 msgstr "E-Mail \"%s\" wurde nicht versendet."
 
-#: .\services\base.py:378
+#: .\services\base.py:384
 #, python-format
 msgid "An error occurred sending email \"%s\" to \"%s\"."
 msgstr "Beim Versenden der E-Mail \"%s\" an \"%s\" ist ein Fehler aufgetreten."
 
-#: .\services\base.py:381
+#: .\services\base.py:387
 #, python-format
 msgid "An error occurred sending email \"%s\"."
 msgstr "Beim Versenden der E-Mail \"%s\" ist ein Fehler aufgetreten."

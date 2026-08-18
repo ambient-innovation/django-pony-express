@@ -2,6 +2,8 @@ from smtplib import SMTPServerDisconnected
 
 from django.core.mail.backends.base import BaseEmailBackend
 
+BROKEN_EMAIL_BACKEND = "testapp.mail_backends.BrokenEmailBackend"
+
 
 class BrokenEmailBackend(BaseEmailBackend):
     """

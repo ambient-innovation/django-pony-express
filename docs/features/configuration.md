@@ -47,13 +47,18 @@ governs *configuration* errors (`EmailServiceConfigError`), which happen before 
 Two things are worth knowing:
 
 * `BaseEmailServiceFactory.process()` aborts the whole batch on the first failing recipient. A factory doesn't pass a
-  connection to the services it creates, so if you want the batch to continue, either set the connection statically in
-  your service class or override `_should_fail_silently()`.
+  connection to the services it creates, so if you want the batch to continue, override `get_connection()` in your
+  service class.
 
   ```python
   class MyMailService(BaseEmailService):
-      connection = get_connection(fail_silently=True)
+      def get_connection(self):
+          return get_connection(fail_silently=True)
   ```
+
+  Create the connection inside the method rather than storing it in a class attribute. A connection kept at class
+  level is shared by every instance in the process, and django's backends serialise every send through a per-instance
+  lock, which would turn a threaded batch back into a sequential one.
 
 * `ThreadEmailService` sends in a thread, so errors can't reach the caller. They surface via `threading.excepthook`
   after having been logged, which error monitoring tools like Sentry pick up. Its `process()` returns whether the email
