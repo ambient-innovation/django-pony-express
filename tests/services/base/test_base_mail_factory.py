@@ -125,6 +125,19 @@ class BaseEmailServiceFactoryTest(TestCase):
         with self.assertRaisesMessage(SMTPServerDisconnected, "connection lost"):
             factory.process()
 
+    def test_process_forwards_raise_exception_to_the_email(self):
+        factory = BaseEmailServiceFactory(recipient_email_list=["albertus.magnus@example.com", "not-an-email"])
+        factory.service_class = self.TestMailService
+
+        self.assertEqual(factory.process(raise_exception=False), 1)
+
+    def test_process_raises_on_invalid_email_by_default(self):
+        factory = BaseEmailServiceFactory(recipient_email_list=["not-an-email"])
+        factory.service_class = self.TestMailService
+
+        with self.assertRaises(EmailServiceConfigError):
+            factory.process()
+
     def test_process_with_exception(self):
         factory = BaseEmailServiceFactory()
         factory.service_class = self.TestMailService

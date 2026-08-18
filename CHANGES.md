@@ -5,8 +5,11 @@
     sending. Errors are still logged, but they are now propagated to the caller unless the used connection was created
     with `fail_silently=True`. Since django creates connections with `fail_silently=False` by default, this affects
     every service which doesn't explicitly pass a connection (#44)
-  * **Breaking change:** `BaseEmailServiceFactory.process()` now only counts emails which were actually sent, instead
-    of counting every attempt
+  * **Breaking change:** `BaseEmailServiceFactory.process()` now only counts emails the service class reported as
+    processed, instead of counting every attempt. Note that `ThreadEmailService` reports an email as processed once it
+    was handed over to a thread, since it can't know whether it was delivered
+  * Fixed a bug where `BaseEmailServiceFactory.process()` didn't pass `raise_exception` on to the emails it creates,
+    so an invalid email aborted the batch even when the caller asked for `raise_exception=False`
   * **Breaking change:** `ThreadEmailService.process()` returns a boolean stating whether the email was handed over to
     a thread, instead of returning `None`
   * Added the accessor `BaseEmailService.get_connection()`, which follows the `get_*()` convention of the other

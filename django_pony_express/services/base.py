@@ -99,7 +99,7 @@ class BaseEmailServiceFactory:
                     recipient_email_list=[self.get_email_from_recipient(recipient)],
                     context_data={"recipient": recipient, **self.get_context_data()},
                 )
-                if email_object.process():
+                if email_object.process(raise_exception=raise_exception):
                     counter += 1
 
         return counter
@@ -395,8 +395,10 @@ class BaseEmailService:
 
     def process(self, raise_exception: bool = True) -> bool:
         """
-        Public method which is called to actually send an email. Calls validation first and returns the result of
-        "msg.send()"
+        Public method which is called to actually send an email. Calls validation first and returns whether the email
+        was sent. Errors occurring while sending are logged and then propagated to the caller, unless the connection
+        used for sending was created with "fail_silently=True". The "raise_exception" argument only governs
+        configuration errors, not sending errors.
         """
         result = False
         if self.is_valid(raise_exception=raise_exception):
