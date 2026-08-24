@@ -18,6 +18,12 @@
   if the constant ``FROM_EMAIL`` in the class is not set.
 
 
+* ``get_recipient_email_list()``
+  Returns the content of class variable ``recipient_email_list``, which holds the recipients of the email. Can
+  automatically be filled by passing the kwarg `recipient_email_list` in the constructor. Override it to resolve the
+  recipients dynamically.
+
+
 * ``get_reply_to_email()``
   Returns the content of constant ``REPLY_TO_ADDRESS``. If this constant is not set, there will be no "reply-to" data in
   the email.

@@ -70,6 +70,49 @@ class BaseEmailServiceTest(TestCase):
 
         self.assertIs(msg.connection, connection)
 
+    def test_get_recipient_email_list_regular(self):
+        service = BaseEmailService(recipient_email_list=["dummy@example.com"])
+
+        self.assertEqual(service.get_recipient_email_list(), ["dummy@example.com"])
+
+    def test_get_recipient_email_list_not_set(self):
+        self.assertEqual(BaseEmailService().get_recipient_email_list(), [])
+
+    def test_build_mail_object_uses_get_recipient_email_list(self):
+        class MyEmailService(BaseEmailService):
+            subject = "My subject"
+            template_name = "testapp/test_email.html"
+
+            def get_recipient_email_list(self):
+                return ["albertus.magnus@example.com"]
+
+        msg = MyEmailService()._build_mail_object()
+
+        self.assertEqual(msg.to, ["albertus.magnus@example.com"])
+
+    def test_is_valid_uses_get_recipient_email_list(self):
+        class MyEmailService(BaseEmailService):
+            subject = "My subject"
+            template_name = "testapp/test_email.html"
+
+            def get_recipient_email_list(self):
+                return ["albertus.magnus@example.com"]
+
+        self.assertIs(MyEmailService().is_valid(), True)
+
+    def test_is_valid_get_recipient_email_list_returns_ill_formatted_email(self):
+        class MyEmailService(BaseEmailService):
+            subject = "My subject"
+            template_name = "testapp/test_email.html"
+
+            def get_recipient_email_list(self):
+                return ["no-email"]
+
+        with self.assertRaisesMessage(
+            EmailServiceConfigError, 'Email service received ill-formatted email address "no-email"'
+        ):
+            MyEmailService().is_valid()
+
     def test_get_logger_logger_not_set(self):
         service = BaseEmailService()
         email_logger = service._get_logger()
