@@ -183,8 +183,10 @@ class BaseEmailService:
 
     def get_recipient_email_list(self) -> list:
         """
-        Returns the recipients of this email. Override this to resolve them dynamically instead of passing them to
-        the constructor.
+        Returns the recipients of this email. Override this to resolve them dynamically. An override takes precedence
+        over anything passed to the constructor, including the address a factory hands to the service class it
+        creates, and has to return a list even for a single recipient. Note that this method is called more than once
+        per email, so cache the result yourself if resolving is expensive.
         """
         return self.recipient_email_list
 
