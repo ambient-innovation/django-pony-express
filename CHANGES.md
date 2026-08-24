@@ -1,7 +1,7 @@
 # Changelog
 
 **3.1.0** (2026-08-24)
-  * Added the accessor `BaseEmailService.get_recipient_email_list()`, which follows the `get_*()` convention of the
+  * Added the accessor `BaseEmailService.get_recipient_emails()`, which follows the `get_*()` convention of the
     other configurable attributes and is the override point for resolving the recipients dynamically
 
 **3.0.0** (2026-08-18)

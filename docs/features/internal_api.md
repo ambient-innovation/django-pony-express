@@ -18,11 +18,12 @@
   if the constant ``FROM_EMAIL`` in the class is not set.
 
 
-* ``get_recipient_email_list()``
+* ``get_recipient_emails()``
   Returns the content of class variable ``recipient_email_list``, which holds the recipients of the email. Can
   automatically be filled by passing the kwarg `recipient_email_list` in the constructor. Override it to resolve the
-  recipients dynamically, returning a list even for a single recipient. Mind that an override takes precedence over anything passed to the constructor, so a service class used by a
-  ``BaseEmailServiceFactory`` will ignore the address the factory hands it. The method is called more than once per
+  recipients dynamically, returning a list even for a single recipient. Mind that an override takes precedence over
+  anything passed to the constructor, so a service class used by a ``BaseEmailServiceFactory`` will ignore the
+  address the factory hands it. The method is called more than once per
   email (once for validation, once for building the mail object), so cache the result yourself if resolving is
   expensive or if the underlying data can change mid-send.
 

@@ -181,12 +181,13 @@ class BaseEmailService:
         """
         return self.FROM_EMAIL or settings.DEFAULT_FROM_EMAIL
 
-    def get_recipient_email_list(self) -> list:
+    def get_recipient_emails(self) -> list:
         """
-        Returns the recipients of this email. Override this to resolve them dynamically. An override takes precedence
-        over anything passed to the constructor, including the address a factory hands to the service class it
-        creates, and has to return a list even for a single recipient. Note that this method is called more than once
-        per email, so cache the result yourself if resolving is expensive.
+        Returns a list of emails which will be used in the "to" field of the generated email. Override this to
+        resolve the recipients dynamically, returning a list even for a single one. An override takes precedence over
+        anything passed to the constructor, including the address a factory hands to the service class it creates.
+        Note that this method is called more than once per email, so cache the result yourself if resolving is
+        expensive.
         """
         return self.recipient_email_list
 
@@ -298,7 +299,7 @@ class BaseEmailService:
             cc=self.get_cc_emails(),
             bcc=self.get_bcc_emails(),
             reply_to=self.get_reply_to_emails(),
-            to=self.get_recipient_email_list(),
+            to=self.get_recipient_emails(),
             connection=self.get_connection(),
         )
         msg.attach_alternative(html_content, "text/html")
@@ -327,7 +328,7 @@ class BaseEmailService:
             self._errors.append(_("Email service requires a subject."))
         if not self.template_name:
             self._errors.append(_("Email service requires a template."))
-        recipient_email_list = self.get_recipient_email_list()
+        recipient_email_list = self.get_recipient_emails()
         if not len(recipient_email_list):
             self._errors.append(_("Email service requires a target mail address."))
         for email in recipient_email_list:
