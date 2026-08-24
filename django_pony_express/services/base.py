@@ -150,9 +150,23 @@ class BaseEmailService:
         if isinstance(recipient_email_list, str):
             recipient_email_list = [recipient_email_list]
 
-        self.recipient_email_list = recipient_email_list or []
+        # A subclass may declare `recipient_email_list`/`attachment_list` as a static class attribute
+        # (per the documented API). Only fall back to that declared value when the constructor argument
+        # is omitted entirely, instead of unconditionally overwriting it with an empty list. When falling
+        # back, copy the class-level value so later in-place mutation (e.g. `.append()`) can't leak across
+        # instances or subclasses sharing the same list object.
+        if recipient_email_list is not None:
+            self.recipient_email_list = recipient_email_list
+        else:
+            self.recipient_email_list = list(self.recipient_email_list)
+
         self.context_data = context_data or {}
-        self.attachment_list = attachment_list or []
+
+        if attachment_list is not None:
+            self.attachment_list = attachment_list
+        else:
+            self.attachment_list = list(self.attachment_list)
+
         self.connection = connection
 
     def _get_logger(self) -> logging.Logger:
