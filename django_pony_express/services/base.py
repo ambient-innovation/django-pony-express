@@ -181,6 +181,16 @@ class BaseEmailService:
         """
         return self.FROM_EMAIL or settings.DEFAULT_FROM_EMAIL
 
+    def get_recipient_emails(self) -> list:
+        """
+        Returns a list of emails which will be used in the "to" field of the generated email. Override this to
+        resolve the recipients dynamically, returning a list even for a single one. An override takes precedence over
+        anything passed to the constructor, including the address a factory hands to the service class it creates.
+        Note that this method is called more than once per email, so cache the result yourself if resolving is
+        expensive.
+        """
+        return self.recipient_email_list
+
     def get_cc_emails(self) -> list:
         """
         Returns a list of emails as a string which will be used in the "CC" field of the generated email.
@@ -289,7 +299,7 @@ class BaseEmailService:
             cc=self.get_cc_emails(),
             bcc=self.get_bcc_emails(),
             reply_to=self.get_reply_to_emails(),
-            to=self.recipient_email_list,
+            to=self.get_recipient_emails(),
             connection=self.get_connection(),
         )
         msg.attach_alternative(html_content, "text/html")
@@ -318,9 +328,10 @@ class BaseEmailService:
             self._errors.append(_("Email service requires a subject."))
         if not self.template_name:
             self._errors.append(_("Email service requires a template."))
-        if not len(self.recipient_email_list):
+        recipient_email_list = self.get_recipient_emails()
+        if not len(recipient_email_list):
             self._errors.append(_("Email service requires a target mail address."))
-        for email in self.recipient_email_list:
+        for email in recipient_email_list:
             if not self._check_email_structure_validity(email=email):
                 self._errors.append(
                     _('Email service received ill-formatted email address "{email}"').format(email=email)
@@ -373,7 +384,7 @@ class BaseEmailService:
         Errors are always logged. Additionally, they are propagated to the caller unless the used connection was
         created with "fail_silently=True", which is django's documented way of asking for quiet delivery.
         """
-        recipients_as_string = " ".join(self.recipient_email_list)
+        recipients_as_string = " ".join(msg.to)
         try:
             # msg.send() returns an int: 0 if no recipients exist, 1 if the message sending was successful
             # Since we want to return a boolean, we check for "== 1" here
