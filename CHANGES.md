@@ -1,5 +1,10 @@
 # Changelog
 
+**3.2.0** (2026-08-27)
+  * Added support for Django 6.1
+  * **Breaking change:** Dropped support for Django 4.2, whose extended support ended in April 2026
+  * Updated the linting and CI setup to the current ambient-package-update template
+
 **3.1.0** (2026-08-24)
   * Added the accessor `BaseEmailService.get_recipient_emails()`, which follows the `get_*()` convention of the
     other configurable attributes and is the override point for resolving the recipients dynamically
