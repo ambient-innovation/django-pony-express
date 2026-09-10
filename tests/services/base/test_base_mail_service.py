@@ -10,6 +10,7 @@ from django.core import mail
 from django.core.mail import EmailMultiAlternatives
 from django.test import TestCase, override_settings
 from django.utils import translation
+from django.utils.translation import gettext_lazy as _
 
 from django_pony_express.errors import EmailServiceAttachmentError, EmailServiceConfigError
 from django_pony_express.services.base import BaseEmailService
@@ -398,6 +399,18 @@ class BaseEmailServiceTest(TestCase):
 
         # Assert, system language is back to "de"
         self.assertEqual(settings.LANGUAGE_CODE, "de")
+
+    @time_machine.travel(datetime.date(2020, 6, 26))
+    @override_settings(LANGUAGE_CODE="de")
+    @mock.patch.object(BaseEmailService, "get_translation", return_value="nl-BE")
+    def test_build_mail_object_evaluates_lazy_subject_in_translation_language(self, *args):
+        service = BaseEmailService(recipient_email_list="noreply@example.com")
+        service.subject = _("Friday")
+        service.template_name = "testapp/test_email.html"
+
+        msg_obj = service._build_mail_object()
+
+        self.assertEqual("vrijdag", msg_obj.subject)
 
     def test_is_valid_positive_case(self):
         email = "albertus.magnus@example.com"
