@@ -10,6 +10,7 @@ from django.core import mail
 from django.core.mail import EmailMultiAlternatives
 from django.test import TestCase, override_settings
 from django.utils import translation
+from django.utils.translation import gettext_lazy
 
 from django_pony_express.errors import EmailServiceAttachmentError, EmailServiceConfigError
 from django_pony_express.services.base import BaseEmailService
@@ -199,15 +200,25 @@ class BaseEmailServiceTest(TestCase):
         service.bcc_email_list = [email]
         self.assertEqual(service.get_bcc_emails(), [email])
 
+    @override_settings(LANGUAGE_CODE="nl-BE", LANGUAGES=[("nl", "Dutch"), ("nl-be", "Flemish")])
+    def test_get_translation_keeps_declared_regional_variant(self):
+        service = BaseEmailService()
+        self.assertEqual(service.get_translation(), "nl-BE")
+
+    @override_settings(LANGUAGE_CODE="sr-Latn")
+    def test_get_translation_keeps_script_variant(self):
+        service = BaseEmailService()
+        self.assertEqual(service.get_translation(), "sr-Latn")
+
     @override_settings(LANGUAGE_CODE="de-AT")
-    def test_get_translation_regular_german(self):
+    def test_get_translation_resolves_undeclared_variant_to_base_language(self):
         service = BaseEmailService()
         self.assertEqual(service.get_translation(), "de")
 
-    @override_settings(LANGUAGE_CODE="en-GB")
-    def test_get_translation_regular_english(self):
+    @override_settings(LANGUAGE_CODE="xx-yy")
+    def test_get_translation_settings_unsupported_language(self):
         service = BaseEmailService()
-        self.assertEqual(service.get_translation(), "en")
+        self.assertEqual(service.get_translation(), None)
 
     @override_settings(LANGUAGE_CODE="de")
     def test_get_translation_settings_short(self):
@@ -219,13 +230,13 @@ class BaseEmailServiceTest(TestCase):
         service = BaseEmailService()
         self.assertEqual(service.get_translation(), None)
 
-    @override_settings(LANGUAGE_CODE=1)
-    def test_get_translation_settings_invalid_type(self):
+    @override_settings(LANGUAGE_CODE="")
+    def test_get_translation_settings_empty(self):
         service = BaseEmailService()
         self.assertEqual(service.get_translation(), None)
 
-    @override_settings(LANGUAGE_CODE="a")
-    def test_get_translation_settings_invalid_value(self):
+    @override_settings(LANGUAGE_CODE=1)
+    def test_get_translation_settings_invalid_type(self):
         service = BaseEmailService()
         self.assertEqual(service.get_translation(), None)
 
@@ -375,6 +386,20 @@ class BaseEmailServiceTest(TestCase):
         self.assertIn("vrijdag", msg_obj.body)
         self.assertIn("vrijdag", msg_obj.alternatives[0][0])
 
+    @time_machine.travel(datetime.date(2020, 6, 26))
+    @override_settings(LANGUAGE_CODE="sr-Latn")
+    def test_build_mail_object_translation_keeps_script_variant(self):
+        service = BaseEmailService(recipient_email_list="noreply@example.com")
+        service.template_name = "testapp/test_email.html"
+        msg_obj = service._build_mail_object()
+
+        # Assertions
+        # Assert, that the email was rendered in the latin script of "sr-Latn" and not in the cyrillic script of the
+        # base language "sr"
+        self.assertIn("petak", msg_obj.body)
+        self.assertIn("petak", msg_obj.alternatives[0][0])
+        self.assertNotIn("петак", msg_obj.body)
+
     def test_check_email_structure_validity_valid_email(self):
         service = BaseEmailService()
         self.assertIs(service._check_email_structure_validity(email="albertus.magnus@example.com"), True)
@@ -384,20 +409,61 @@ class BaseEmailServiceTest(TestCase):
         self.assertIs(service._check_email_structure_validity(email="no-at-example.com"), False)
 
     @time_machine.travel(datetime.date(2020, 6, 26))
-    @override_settings(LANGUAGE_CODE="de")
     @mock.patch.object(BaseEmailService, "get_translation", return_value="nl-BE")
-    def test_build_mail_object_deactivates_language_afterwards(self, *args):
+    def test_build_mail_object_restores_language_afterwards(self, *args):
         service = BaseEmailService(recipient_email_list="noreply@example.com")
         service.template_name = "testapp/test_email.html"
-        msg_obj = service._build_mail_object()
 
-        # Assertions
+        with translation.override("de"):
+            msg_obj = service._build_mail_object()
+
+            # Assert, the language active before building the email is restored
+            self.assertEqual(translation.get_language(), "de")
+
         # Assert, that email was rendered in nl-BE language
         self.assertIn("vrijdag", msg_obj.body)
         self.assertIn("vrijdag", msg_obj.alternatives[0][0])
 
-        # Assert, system language is back to "de"
-        self.assertEqual(settings.LANGUAGE_CODE, "de")
+    @mock.patch.object(BaseEmailService, "get_translation", return_value="nl-BE")
+    def test_build_mail_object_restores_language_on_error(self, *args):
+        service = BaseEmailService(recipient_email_list="noreply@example.com")
+        service.template_name = "testapp/test_email.html"
+
+        with (
+            translation.override("de"),
+            mock.patch.object(BaseEmailService, "get_context_data", side_effect=RuntimeError),
+        ):
+            with self.assertRaises(RuntimeError):
+                service._build_mail_object()
+
+            self.assertEqual(translation.get_language(), "de")
+
+    @mock.patch.object(BaseEmailService, "get_translation", return_value="de")
+    def test_build_mail_object_resolves_lazy_subject_in_email_language(self, *args):
+        service = BaseEmailService(recipient_email_list="noreply@example.com")
+        service.template_name = "testapp/test_email.html"
+        service.subject = gettext_lazy("Password")
+
+        with translation.override("nl"):
+            msg_obj = service._build_mail_object()
+
+        # Assert, the subject is resolved in the language of the email instead of the one the caller runs in, which
+        # a lazy string would otherwise be resolved in once the backend sends the email
+        self.assertEqual(msg_obj.message()["Subject"], "Passwort")
+
+    @time_machine.travel(datetime.date(2020, 6, 26))
+    @mock.patch.object(BaseEmailService, "get_translation", return_value=None)
+    def test_build_mail_object_without_translation_keeps_active_language(self, *args):
+        service = BaseEmailService(recipient_email_list="noreply@example.com")
+        service.template_name = "testapp/test_email.html"
+
+        with translation.override("nl"):
+            msg_obj = service._build_mail_object()
+
+            self.assertEqual(translation.get_language(), "nl")
+
+        # Assert, the email was rendered in the language which was active when it was built
+        self.assertIn("vrijdag", msg_obj.body)
 
     def test_is_valid_positive_case(self):
         email = "albertus.magnus@example.com"

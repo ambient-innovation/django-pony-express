@@ -46,10 +46,14 @@
 
 
 * ``get_translation()``
-  Tries to parse the language from the django settings variable ``LANGUAGE_CODE``. Can be overwritten to set a language
-  manually. Needs to return either `None` or a two-character language code like `en` or `de`. If this method returns
-  `None`, translation will be deactivated. Translations are needed for localised values like getting the current month
-  from a date (in the correct language).
+  Returns the language from the django settings variable ``LANGUAGE_CODE``. Regional and script variants like `nl-BE`
+  or `sr-Latn` are kept as long as ``LANGUAGES`` declares them, otherwise they are resolved to their base language,
+  which is how django resolves the language of a request as well. So if you want your emails rendered in `nl-BE`, add
+  it to ``LANGUAGES`` next to setting it as your ``LANGUAGE_CODE``. Can be overwritten to set a language manually and
+  needs to return either `None` or a language code django understands. If this method returns `None`, the email is
+  rendered in whatever language is currently active. The language is only applied while the email is being built and
+  the previously active language is restored afterwards. Translations are needed for localised values like getting the
+  current month from a date (in the correct language).
 
 * ``get_attachments()``
   This method returns a list of paths to a locally-stored file. Can automatically be filled by passing the kwarg
