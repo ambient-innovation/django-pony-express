@@ -465,6 +465,18 @@ class BaseEmailServiceTest(TestCase):
         # Assert, the email was rendered in the language which was active when it was built
         self.assertIn("vrijdag", msg_obj.body)
 
+    @time_machine.travel(datetime.date(2020, 6, 26))
+    @override_settings(LANGUAGE_CODE="de")
+    @mock.patch.object(BaseEmailService, "get_translation", return_value="nl-BE")
+    def test_build_mail_object_evaluates_lazy_subject_in_translation_language(self, *args):
+        service = BaseEmailService(recipient_email_list="noreply@example.com")
+        service.subject = gettext_lazy("Friday")
+        service.template_name = "testapp/test_email.html"
+
+        msg_obj = service._build_mail_object()
+
+        self.assertEqual("vrijdag", msg_obj.subject)
+
     def test_is_valid_positive_case(self):
         email = "albertus.magnus@example.com"
         subject = "Test email"

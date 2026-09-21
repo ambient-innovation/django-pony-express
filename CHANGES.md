@@ -7,7 +7,7 @@
   * `BaseEmailService._build_mail_object()` now restores the language which was active before the email was built,
     instead of resetting it to `LANGUAGE_CODE`, and does so even when rendering raises
   * A lazily translated `subject` is now resolved in the language of the email, instead of in whatever language is
-    active once the backend sends it
+    active once the backend sends it (#52)
 
 **3.2.0** (2026-08-27)
   * Added support for Django 6.1

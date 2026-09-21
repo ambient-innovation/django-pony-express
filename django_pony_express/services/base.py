@@ -9,6 +9,7 @@ from django.core.mail.backends.base import BaseEmailBackend
 from django.db.models import QuerySet
 from django.template.loader import render_to_string
 from django.utils import translation
+from django.utils.encoding import force_str
 from django.utils.translation import get_supported_language_variant
 from django.utils.translation import gettext_lazy as _
 
@@ -297,7 +298,7 @@ class BaseEmailService:
             # Build mail object. The subject is resolved while the language is still active, because a lazily
             # translated one would otherwise be resolved by the backend when the email is sent.
             msg = EmailMultiAlternatives(
-                str(self.get_subject()),
+                force_str(self.get_subject()),
                 text_content,
                 from_email=self.get_from_email(),
                 cc=self.get_cc_emails(),
