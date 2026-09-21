@@ -1,5 +1,6 @@
 import logging
 import re
+from contextlib import nullcontext
 
 from bs4 import BeautifulSoup
 from django.conf import settings
@@ -9,6 +10,7 @@ from django.db.models import QuerySet
 from django.template.loader import render_to_string
 from django.utils import translation
 from django.utils.encoding import force_str
+from django.utils.translation import get_supported_language_variant
 from django.utils.translation import gettext_lazy as _
 
 from django_pony_express.errors import EmailServiceAttachmentError, EmailServiceConfigError
@@ -212,16 +214,18 @@ class BaseEmailService:
 
     def get_translation(self) -> str | None:
         """
-        Tries to fetch the current translation from the django settings.
+        Tries to fetch the current translation from the django settings. Regional and script variants like "nl-BE" or
+        "sr-Latn" are kept as long as `LANGUAGES` declares them, otherwise they are resolved to their base language,
+        which is how django resolves the language of a request as well. Returning `None` renders the email in
+        whatever language is currently active.
         """
-        language_str_length = 2
+        language_code = settings.LANGUAGE_CODE
+        if not isinstance(language_code, str) or not language_code:
+            return None
+
         try:
-            return (
-                settings.LANGUAGE_CODE[:2]
-                if settings.LANGUAGE_CODE and len(settings.LANGUAGE_CODE) >= language_str_length
-                else None
-            )
-        except TypeError:
+            return get_supported_language_variant(language_code)
+        except LookupError:
             return None
 
     def get_connection(self) -> BaseEmailBackend | None:
@@ -280,36 +284,33 @@ class BaseEmailService:
         a "reply_to" is set for maximum convenience during the runtime.
         The plaintext part of the email is generated from the html to avoid maintaining duplicate templates.
         """
-        # Optionally set translation language for date formatting etc.
+        # Optionally set translation language for date formatting etc. `translation.override()` restores the
+        # previously active language afterwards, even when rendering raises.
         language = self.get_translation()
-        if language:
-            translation.activate(language)
+        with translation.override(language) if language else nullcontext():
+            # Gather variables
+            mail_attributes = self.get_context_data()
 
-        # Gather variables
-        mail_attributes = self.get_context_data()
+            # Render HTML body content
+            html_content = self._generate_html_content(mail_attributes)
+            text_content = self._generate_text_content(mail_attributes, html_content)
 
-        # Render HTML body content
-        html_content = self._generate_html_content(mail_attributes)
-        text_content = self._generate_text_content(mail_attributes, html_content)
+            # Build mail object. The subject is resolved while the language is still active, because a lazily
+            # translated one would otherwise be resolved by the backend when the email is sent.
+            msg = EmailMultiAlternatives(
+                force_str(self.get_subject()),
+                text_content,
+                from_email=self.get_from_email(),
+                cc=self.get_cc_emails(),
+                bcc=self.get_bcc_emails(),
+                reply_to=self.get_reply_to_emails(),
+                to=self.get_recipient_emails(),
+                connection=self.get_connection(),
+            )
+            msg.attach_alternative(html_content, "text/html")
 
-        # Build mail object
-        msg = EmailMultiAlternatives(
-            force_str(self.get_subject()),
-            text_content,
-            from_email=self.get_from_email(),
-            cc=self.get_cc_emails(),
-            bcc=self.get_bcc_emails(),
-            reply_to=self.get_reply_to_emails(),
-            to=self.get_recipient_emails(),
-            connection=self.get_connection(),
-        )
-        msg.attach_alternative(html_content, "text/html")
-
-        # Add attachments (if available)
-        msg = self._add_attachments(msg)
-
-        # Deactivate translation
-        translation.deactivate()
+            # Add attachments (if available)
+            msg = self._add_attachments(msg)
 
         # Return mail object
         return msg

@@ -1,8 +1,13 @@
 # Changelog
 
-**3.2.1** (2026-09-10)
-  * Fixed lazy email subjects being translated into the project's default language instead of the one returned by
-    `BaseEmailService.get_translation()`.
+**3.2.1** (2026-09-11)
+  * Fixed a bug where `BaseEmailService.get_translation()` truncated `LANGUAGE_CODE` to its first two characters, so
+    regional and script variants like `nl-BE` or `sr-Latn` were rendered in their base language. Such a variant is now
+    kept as long as `LANGUAGES` declares it, which is how django resolves the language of a request as well (#53)
+  * `BaseEmailService._build_mail_object()` now restores the language which was active before the email was built,
+    instead of resetting it to `LANGUAGE_CODE`, and does so even when rendering raises
+  * A lazily translated `subject` is now resolved in the language of the email, instead of in whatever language is
+    active once the backend sends it (#52)
 
 **3.2.0** (2026-08-27)
   * Added support for Django 6.1
