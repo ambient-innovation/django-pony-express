@@ -1,8 +1,11 @@
 # Changelog
 
-**3.2.1** (2026-09-10)
+**3.2.1** (2026-09-29)
   * Fixed lazy email subjects being translated into the project's default language instead of the one returned by
     `BaseEmailService.get_translation()`.
+  * Aligning the language variant handling to use the default Django mechanism. `BaseEmailService.get_translation()` now
+    returns the full `LANGUAGE_CODE` (e.g. `de-at`) instead of normalising it to the base language (`de`), so local
+    language variants are kept when rendering emails.
 
 **3.2.0** (2026-08-27)
   * Added support for Django 6.1

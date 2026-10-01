@@ -200,36 +200,6 @@ class BaseEmailServiceTest(TestCase):
         service.bcc_email_list = [email]
         self.assertEqual(service.get_bcc_emails(), [email])
 
-    @override_settings(LANGUAGE_CODE="de-AT")
-    def test_get_translation_regular_german(self):
-        service = BaseEmailService()
-        self.assertEqual(service.get_translation(), "de")
-
-    @override_settings(LANGUAGE_CODE="en-GB")
-    def test_get_translation_regular_english(self):
-        service = BaseEmailService()
-        self.assertEqual(service.get_translation(), "en")
-
-    @override_settings(LANGUAGE_CODE="de")
-    def test_get_translation_settings_short(self):
-        service = BaseEmailService()
-        self.assertEqual(service.get_translation(), "de")
-
-    @override_settings(LANGUAGE_CODE=None)
-    def test_get_translation_settings_not_set(self):
-        service = BaseEmailService()
-        self.assertEqual(service.get_translation(), None)
-
-    @override_settings(LANGUAGE_CODE=1)
-    def test_get_translation_settings_invalid_type(self):
-        service = BaseEmailService()
-        self.assertEqual(service.get_translation(), None)
-
-    @override_settings(LANGUAGE_CODE="a")
-    def test_get_translation_settings_invalid_value(self):
-        service = BaseEmailService()
-        self.assertEqual(service.get_translation(), None)
-
     def test_get_attachments_regular(self):
         file_path = "usr/albertus/myfile.csv"
         service = BaseEmailService(attachment_list=[file_path])
@@ -399,6 +369,15 @@ class BaseEmailServiceTest(TestCase):
 
         # Assert, system language is back to "de"
         self.assertEqual(settings.LANGUAGE_CODE, "de")
+
+    @override_settings(LANGUAGE_CODE="nl-BE")
+    def test_build_mail_object_retains_local_language_variants(self, *args):
+        service = BaseEmailService(recipient_email_list="noreply@example.com")
+        service.template_name = "testapp/test_email_language.html"
+        msg_obj = service._build_mail_object()
+
+        self.assertIn("nl-be", msg_obj.body)
+        self.assertIn("nl-be", msg_obj.alternatives[0][0])
 
     @time_machine.travel(datetime.date(2020, 6, 26))
     @override_settings(LANGUAGE_CODE="de")

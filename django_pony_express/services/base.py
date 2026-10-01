@@ -214,15 +214,7 @@ class BaseEmailService:
         """
         Tries to fetch the current translation from the django settings.
         """
-        language_str_length = 2
-        try:
-            return (
-                settings.LANGUAGE_CODE[:2]
-                if settings.LANGUAGE_CODE and len(settings.LANGUAGE_CODE) >= language_str_length
-                else None
-            )
-        except TypeError:
-            return None
+        return settings.LANGUAGE_CODE
 
     def get_connection(self) -> BaseEmailBackend | None:
         """
