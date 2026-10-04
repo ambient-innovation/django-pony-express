@@ -29,7 +29,32 @@ class BaseEmailServiceTest(TestCase):
     def test_init_recipient_and_context_are_initialised_empty(self):
         service = BaseEmailService()
         self.assertEqual(service.recipient_email_list, [])
+        self.assertEqual(service.attachment_list, [])
         self.assertEqual(service.context_data, {})
+
+    def test_init_recipient_email_list_falls_back_to_class_attribute(self):
+        class MyEmailService(BaseEmailService):
+            recipient_email_list = ["albertus.magnus@example.com"]
+
+        service = MyEmailService()
+
+        self.assertEqual(service.recipient_email_list, ["albertus.magnus@example.com"])
+
+    def test_init_attachment_list_falls_back_to_class_attribute(self):
+        class MyEmailService(BaseEmailService):
+            attachment_list = ["/tmp/some.pdf"]
+
+        service = MyEmailService()
+
+        self.assertEqual(service.attachment_list, ["/tmp/some.pdf"])
+
+    def test_init_explicit_recipient_email_list_overrides_class_attribute(self):
+        class MyEmailService(BaseEmailService):
+            recipient_email_list = ["static@example.com"]
+
+        service = MyEmailService(recipient_email_list=["explicit@example.com"])
+
+        self.assertEqual(service.recipient_email_list, ["explicit@example.com"])
 
     def test_init_connection_regular(self):
         connection = mail.get_connection()

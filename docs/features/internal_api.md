@@ -44,6 +44,7 @@
 * ``get_attachments()``
   This method returns a list of paths to a locally-stored file. Can automatically be filled by passing the kwarg
   `attachment_list` in the constructor. Each file of the given list will be attached to the newly created email.
+  Like `recipient_email_list`, it can also be declared statically in the class definition.
 
 * ``has_errors()``
   If ``is_valid()`` is called with the keyword argument `raise_exception=False`, the configuration errors are not raised

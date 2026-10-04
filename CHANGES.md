@@ -1,5 +1,9 @@
 # Changelog
 
+**3.0.1** (unreleased)
+  * Fixed a bug where `BaseEmailService.__init__()` overwrote a statically declared `recipient_email_list` or
+    `attachment_list` with an empty list when the constructor argument was omitted (#48)
+
 **3.0.0** (2026-08-18)
   * **Breaking change:** `BaseEmailService._send_and_log_email()` no longer swallows every error occurring while
     sending. Errors are still logged, but they are now propagated to the caller unless the used connection was created
@@ -178,6 +182,7 @@
 
 **1.1.6** (2023-09-08)
   * Metadata update via ambient package updater
+  * Cleaned up test matrix
 
 **1.1.5** (2023-09-08)
   * Metadata update via ambient package updater
