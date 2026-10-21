@@ -5,6 +5,7 @@
   * Fixed the Sphinx configuration for sphinx-rtd-theme 3, removing the documentation build warnings
   * Fixed broken links in the pre-commit section of `CONTRIBUTING.md`
   * Reformatted the Python code examples in the documentation
+  * Stopped committing `uv.lock`, since the package is a library and the lockfile never reaches its users
 
 **3.2.1** (2026-09-29)
   * Fixed lazy email subjects being translated into the project's default language instead of the one returned by
