@@ -15,7 +15,9 @@ jobs:
           python-version: "3.14"
 
       - name: Install required packages
-        run: pip install pre-commit
+        run: |
+          python -m pip install --upgrade 'pip>=26.2.2'
+          pip install pre-commit
 
       - name: Run pre-commit hooks
         run: pre-commit run --all-files
@@ -71,7 +73,9 @@ jobs:
           python-version: '3.14'
 
       - name: Install dependencies
-        run: python -m pip install --upgrade coverage[toml]
+        run: |
+          python -m pip install --upgrade 'pip>=26.2.2'
+          python -m pip install --upgrade coverage[toml]
 
       - name: Download data
         uses: actions/download-artifact@v8
