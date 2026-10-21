@@ -27,16 +27,18 @@ end an email and worry about if the ``to`` field requires a list or string of em
 ````python
 from django_pony_express.services.base import BaseEmailService
 
+
 class MyFancyClassBasedMail(BaseEmailService):
     """
     Send an email to my admins to inform them about something important.
     """
-    subject = _('Heads up, admins!')
-    template_name = 'email/my_fancy_class_based_email.html'
+
+    subject = _("Heads up, admins!")
+    template_name = "email/my_fancy_class_based_email.html"
 
     def get_context_data(self):
         data = super().get_context_data()
-        data['my_variable'] = ...
+        data["my_variable"] = ...
         return data
 ````
 
@@ -76,8 +78,8 @@ If you want to customise the filename or even pass a mimetype, you can do as fol
 
 ````python
 email_service = MyMailService(
-  ...,
-  attachment_list=[{'filename': 'my_fancy_file.json', 'file': file_content, 'mimetype': 'application/json'}],
+    ...,
+    attachment_list=[{"filename": "my_fancy_file.json", "file": file_content, "mimetype": "application/json"}],
 )
 ````
 
